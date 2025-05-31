@@ -100,7 +100,7 @@ const getGamesData = (popularity: PopularityFilter): GameData[] => {
     case 'bestgames':
       return bestGamesData;
     default:
-      return newestGamesData; // Par défaut, retourner les plus récents
+      return mostplayedGamesData; // Par défaut, retourner les plus joués
   }
 };
 
