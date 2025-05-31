@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
 import ScrollToTop from './ScrollToTop';
+import CookieBanner from './CookieBanner';
 import { Menu } from 'lucide-react';
 
 const Layout = () => {
@@ -41,6 +42,7 @@ const Layout = () => {
             <Outlet />
           </main>
           <Footer />
+          <CookieBanner />
         </div>
       </div>
     </div>
