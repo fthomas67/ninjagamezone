@@ -252,11 +252,6 @@ const GamePage = () => {
             </div>
           </div>
 
-          {/* Ad banner above description */}
-          <div className="bg-gray-200 rounded-xl p-4 text-center mt-6">
-            <p className="text-gray-500">Advertisement Space</p>
-          </div>
-
           {/* Game info */}
           <div className="bg-white rounded-xl shadow-md overflow-hidden mt-6 p-6">
             <h2 className="text-2xl font-bold mb-4">{game.title}</h2>
@@ -291,10 +286,6 @@ const GamePage = () => {
 
         {/* Sidebar - Ad and Similar Games */}
         <div className="lg:col-span-1 space-y-6">
-          {/* Side ad banner */}
-          <div className="bg-gray-200 rounded-xl p-4 text-center">
-            <p className="text-gray-500">Advertisement Space</p>
-          </div>
 
           {/* Similar games */}
           <div className="bg-white rounded-xl shadow-md overflow-hidden">

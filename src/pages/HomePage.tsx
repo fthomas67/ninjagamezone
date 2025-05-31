@@ -95,21 +95,11 @@ const HomePage = () => {
         </p>
       </div>
       
-      {/* Ad banner above game grid */}
-      <div className="w-full bg-gray-200 rounded-xl p-4 mb-6 text-center">
-        <p className="text-gray-500">Advertisement Space</p>
-      </div>
-      
       <GameGrid
         categoryId={selectedCategory}
         popularity={popularityFilter}
         searchTerm={searchQuery}
       />
-      
-      {/* Ad banner below game grid */}
-      <div className="w-full bg-gray-200 rounded-xl p-4 mt-8 text-center">
-        <p className="text-gray-500">Advertisement Space</p>
-      </div>
     </div>
   );
 };
