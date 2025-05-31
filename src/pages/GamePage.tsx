@@ -272,14 +272,14 @@ const GamePage = () => {
             </div>
             
             <div className="prose prose-sm max-w-none">
-              <p className="text-gray-600 whitespace-pre-line">{game.description}</p>
-              
               {game.instructions && (
-                <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-100">
+                <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-100">
                   <h3 className="font-bold mb-2">Instructions</h3>
                   <p className="text-gray-600">{game.instructions}</p>
                 </div>
               )}
+              
+              <p className="text-gray-600 whitespace-pre-line">{game.description}</p>
             </div>
           </div>
         </div>
