@@ -6,6 +6,7 @@ import NotFoundPage from './pages/NotFoundPage';
 import CategoryPage from './pages/CategoryPage';
 import FilterPage from './pages/FilterPage';
 import LegalNoticePage from './pages/LegalNoticePage';
+import AdsTxtPage from './pages/AdsTxtPage';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route index element={<HomePage />} />
         <Route path="/game/:gameId/:gameSlug" element={<GamePage />} />
         <Route path="/legal-notice" element={<LegalNoticePage />} />
+        <Route path="/ads.txt" element={<AdsTxtPage />} />
         
         {/* Global filter routes */}
         <Route path="/most-played" element={<FilterPage filter="mostplayed" />} />
