@@ -277,13 +277,13 @@ const GamePage = () => {
         <div className="lg:col-span-1 space-y-6">
           {/* Side ad banner */}
           <div className="bg-gray-200 rounded-xl p-4 text-center">
-            <p className="text-gray-500">Espace publicitaire</p>
+            <p className="text-gray-500">Advertisement Space</p>
           </div>
 
           {/* Similar games */}
           <div className="bg-white rounded-xl shadow-md overflow-hidden">
             <h3 className="text-lg font-bold p-4 border-b border-gray-100">
-              Jeux similaires
+              Similar Games
             </h3>
             <div className="divide-y divide-gray-100">
               {similarGames.map(similarGame => {

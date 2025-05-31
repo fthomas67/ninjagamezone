@@ -47,7 +47,7 @@ const CategoryPage = ({ filter = 'newest' }: CategoryPageProps) => {
   };
 
   const getFilterDescription = () => {
-    const baseDescription = `Discover our selection of ${category.name.toLowerCase()} games.`;
+    const baseDescription = `Explore our collection of ${category.name.toLowerCase()} games.`;
     
     switch (filter) {
       case 'newest':
@@ -55,7 +55,7 @@ const CategoryPage = ({ filter = 'newest' }: CategoryPageProps) => {
       case 'mostplayed':
         return `${baseDescription} The most popular games in this category.`;
       case 'bestgames':
-        return `${baseDescription} The best rated games in this category.`;
+        return `${baseDescription} The highest rated games in this category.`;
       default:
         return baseDescription;
     }

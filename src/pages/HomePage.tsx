@@ -69,7 +69,7 @@ const HomePage = () => {
 
   const getPageTitle = () => {
     if (searchQuery) {
-      return `Results for "${searchQuery}"`;
+      return `Search Results for "${searchQuery}"`;
     }
     
     return "Free Online Games - Play Now!";
@@ -77,10 +77,10 @@ const HomePage = () => {
 
   const getPageDescription = () => {
     if (searchQuery) {
-      return `Discover all games matching your search.`;
+      return `Find all games matching your search query.`;
     }
     
-    return "Discover our selection of the best free online games. Hundreds of quality games, playable directly in your browser. Action, adventure, puzzle, sports and much more!";
+    return "Discover our collection of the best free online games. Play hundreds of high-quality games directly in your browser. Action, adventure, puzzle, sports and much more!";
   };
 
   return (
