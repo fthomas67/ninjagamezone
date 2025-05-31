@@ -2,6 +2,7 @@ import { Outlet } from 'react-router-dom';
 import { useState } from 'react';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
+import ScrollToTop from './ScrollToTop';
 import { Menu } from 'lucide-react';
 
 const Layout = () => {
@@ -9,6 +10,7 @@ const Layout = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <ScrollToTop />
       <div className="flex flex-1">
         <Sidebar 
           isOpen={isSidebarOpen} 
