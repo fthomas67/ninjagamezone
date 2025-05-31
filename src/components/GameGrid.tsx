@@ -42,7 +42,7 @@ const GameGrid = ({ categoryId = 0, popularity = 'mostplayed', searchTerm = '' }
       // Vérifier si on a atteint la fin des jeux disponibles
       setHasMore(games.length + response.games.length < response.total);
     } catch (err) {
-      setError('Erreur lors du chargement des jeux. Veuillez réessayer.');
+      setError('Error loading games. Please try again.');
       console.error(err);
     } finally {
       setLoading(false);
@@ -78,7 +78,7 @@ const GameGrid = ({ categoryId = 0, popularity = 'mostplayed', searchTerm = '' }
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center text-center p-4">
         <Gamepad2 className="w-16 h-16 text-gray-400 mb-4" />
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">Oups !</h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">Oops!</h2>
         <p className="text-gray-600 mb-6">{error}</p>
       </div>
     );
@@ -99,9 +99,9 @@ const GameGrid = ({ categoryId = 0, popularity = 'mostplayed', searchTerm = '' }
       {!loading && games.length === 0 && (
         <div className="col-span-full text-center py-16">
           <Gamepad2 className="mx-auto h-16 w-16 text-gray-400 mb-4" />
-          <h3 className="text-lg font-medium text-gray-900">Aucun jeu trouvé</h3>
+          <h3 className="text-lg font-medium text-gray-900">No games found</h3>
           <p className="mt-1 text-gray-500">
-            Essaie de modifier tes filtres ou ta recherche.
+            Try adjusting your filters or search.
           </p>
         </div>
       )}

@@ -37,9 +37,9 @@ const transformGameData = (gameData: GameData): Game => ({
 
 const getCategoryIdFromName = (categoryName: string): number => {
   const categoryMap: { [key: string]: number } = {
-    'All': 0,
+    'All Games': 0,
     '.IO': 1,
-    '2 Player': 2,
+    '2 Players': 2,
     '3D': 3,
     'Action': 4,
     'Adventure': 5,
@@ -55,7 +55,7 @@ const getCategoryIdFromName = (categoryName: string): number => {
     'Puzzle': 15,
     'Racing': 16,
     'Shooting': 17,
-    'Soccer': 18,
+    'Football': 18,
     'Sports': 19,
     'Stickman': 20
   };
@@ -65,9 +65,9 @@ const getCategoryIdFromName = (categoryName: string): number => {
 
 const getCategoryNameFromId = (categoryId: number): string => {
   const categoryMap: { [key: number]: string } = {
-    0: 'All',
+    0: 'All Games',
     1: '.IO',
-    2: '2 Player',
+    2: '2 Players',
     3: '3D',
     4: 'Action',
     5: 'Adventure',
@@ -83,12 +83,12 @@ const getCategoryNameFromId = (categoryId: number): string => {
     15: 'Puzzle',
     16: 'Racing',
     17: 'Shooting',
-    18: 'Soccer',
+    18: 'Football',
     19: 'Sports',
     20: 'Stickman'
   };
 
-  return categoryMap[categoryId] || 'All';
+  return categoryMap[categoryId] || 'All Games';
 };
 
 const getGamesData = (popularity: PopularityFilter): GameData[] => {

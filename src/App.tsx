@@ -13,18 +13,18 @@ function App() {
         <Route index element={<HomePage />} />
         <Route path="/jeu/:gameId/:gameSlug" element={<GamePage />} />
         
-        {/* Routes pour les filtres globaux */}
-        <Route path="/plus-joues" element={<FilterPage filter="mostplayed" />} />
-        <Route path="/plus-recents" element={<FilterPage filter="newest" />} />
-        <Route path="/mieux-notes" element={<FilterPage filter="bestgames" />} />
+        {/* Global filter routes */}
+        <Route path="/most-played" element={<FilterPage filter="mostplayed" />} />
+        <Route path="/newest" element={<FilterPage filter="newest" />} />
+        <Route path="/best-rated" element={<FilterPage filter="bestgames" />} />
         
-        {/* Routes pour les catégories */}
+        {/* Category routes */}
         <Route path="/:categorySlug" element={<CategoryPage />} />
         
-        {/* Routes pour les catégories avec filtres */}
-        <Route path="/:categorySlug/plus-joues" element={<CategoryPage filter="mostplayed" />} />
-        <Route path="/:categorySlug/plus-recents" element={<CategoryPage filter="newest" />} />
-        <Route path="/:categorySlug/mieux-notes" element={<CategoryPage filter="bestgames" />} />
+        {/* Category routes with filters */}
+        <Route path="/:categorySlug/most-played" element={<CategoryPage filter="mostplayed" />} />
+        <Route path="/:categorySlug/newest" element={<CategoryPage filter="newest" />} />
+        <Route path="/:categorySlug/best-rated" element={<CategoryPage filter="bestgames" />} />
         
         <Route path="*" element={<NotFoundPage />} />
       </Route>

@@ -17,22 +17,22 @@ const Footer = () => {
           </div>
           
           <div className="flex gap-6">
-            <Link to="/" className="text-gray-600 hover:text-primary">Accueil</Link>
-            <Link to="/mentions-legales" className="text-gray-600 hover:text-primary">Mentions Légales</Link>
-            <Link to="/politique-cookies" className="text-gray-600 hover:text-primary">Cookies</Link>
-            <Link to="/a-propos" className="text-gray-600 hover:text-primary">À propos</Link>
+            <Link to="/" className="text-gray-600 hover:text-primary">Home</Link>
+            <Link to="/legal-notice" className="text-gray-600 hover:text-primary">Legal Notice</Link>
+            <Link to="/cookie-policy" className="text-gray-600 hover:text-primary">Cookies</Link>
+            <Link to="/about" className="text-gray-600 hover:text-primary">About</Link>
           </div>
         </div>
         
         <div className="border-t border-gray-200 pt-6 text-center">
           <p className="text-gray-500 text-sm">
-            Les jeux sont fournis par GameMonetize via leur flux RSS. NinjaGameZone n'est pas affilié à GameMonetize.
+            Games are provided by GameMonetize via their RSS feed. NinjaGameZone is not affiliated with GameMonetize.
           </p>
           
           <p className="text-gray-500 text-sm mt-2 flex items-center justify-center gap-1">
-            <span>Créé avec</span> 
+            <span>Created with</span> 
             <Heart className="w-4 h-4 text-secondary inline" /> 
-            <span>en 2025</span>
+            <span>in 2025</span>
           </p>
         </div>
       </div>

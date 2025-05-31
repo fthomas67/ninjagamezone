@@ -14,7 +14,7 @@ const GameCard = ({ game }: GameCardProps) => {
     <Link
       to={gameUrl}
       className="card group hover:scale-[1.02] transition-all duration-300"
-      aria-label={`Jouer à ${game.title}`}
+      aria-label={`Play ${game.title}`}
     >
       <div className="relative aspect-video overflow-hidden rounded-xl bg-gray-200">
         <img

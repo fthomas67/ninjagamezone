@@ -17,9 +17,9 @@ const CategoryPage = ({ filter = 'newest' }: CategoryPageProps) => {
   if (!category) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center text-center p-4">
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">Catégorie non trouvée</h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">Category not found</h2>
         <p className="text-gray-600 mb-6">
-          La catégorie que vous recherchez n'existe pas.
+          The category you're looking for doesn't exist.
         </p>
       </div>
     );
@@ -29,33 +29,33 @@ const CategoryPage = ({ filter = 'newest' }: CategoryPageProps) => {
     let filterName = '';
     switch (filter) {
       case 'newest':
-        filterName = 'les plus récents';
+        filterName = 'newest';
         break;
       case 'mostplayed':
-        filterName = 'les plus joués';
+        filterName = 'most played';
         break;
       case 'bestgames':
-        filterName = 'les mieux notés';
+        filterName = 'best rated';
         break;
       default:
-        filterName = 'les plus populaires';
+        filterName = 'most popular';
     }
     
-    return category.name === 'Tous les jeux' 
+    return category.name === 'All Games' 
       ? `${category.name} ${filterName}`
-      : `Jeux ${category.name} ${filterName}`;
+      : `${category.name} Games ${filterName}`;
   };
 
   const getFilterDescription = () => {
-    const baseDescription = `Découvre notre sélection de jeux ${category.name.toLowerCase()}.`;
+    const baseDescription = `Discover our selection of ${category.name.toLowerCase()} games.`;
     
     switch (filter) {
       case 'newest':
-        return `${baseDescription} Les derniers jeux ajoutés dans cette catégorie.`;
+        return `${baseDescription} The latest games added to this category.`;
       case 'mostplayed':
-        return `${baseDescription} Les jeux les plus populaires de cette catégorie.`;
+        return `${baseDescription} The most popular games in this category.`;
       case 'bestgames':
-        return `${baseDescription} Les jeux les mieux notés de cette catégorie.`;
+        return `${baseDescription} The best rated games in this category.`;
       default:
         return baseDescription;
     }
@@ -75,7 +75,7 @@ const CategoryPage = ({ filter = 'newest' }: CategoryPageProps) => {
       
       {/* Ad banner above game grid */}
       <div className="w-full bg-gray-200 rounded-xl p-4 mb-6 text-center">
-        <p className="text-gray-500">Espace publicitaire</p>
+        <p className="text-gray-500">Advertisement Space</p>
       </div>
       
       <GameGrid
@@ -85,7 +85,7 @@ const CategoryPage = ({ filter = 'newest' }: CategoryPageProps) => {
       
       {/* Ad banner below game grid */}
       <div className="w-full bg-gray-200 rounded-xl p-4 mt-8 text-center">
-        <p className="text-gray-500">Espace publicitaire</p>
+        <p className="text-gray-500">Advertisement Space</p>
       </div>
     </div>
   );

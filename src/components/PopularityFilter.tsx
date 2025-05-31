@@ -9,7 +9,7 @@ interface PopularityFilterProps {
 const PopularityFilter = ({ selected, onChange }: PopularityFilterProps) => {
   return (
     <div className="mb-6">
-      <h2 className="text-lg font-bold mb-3">Trier par</h2>
+      <h2 className="text-lg font-bold mb-3">Sort by</h2>
       
       <div className="flex flex-wrap gap-2">
         <button
@@ -22,7 +22,7 @@ const PopularityFilter = ({ selected, onChange }: PopularityFilterProps) => {
           `}
         >
           <Sparkles className="w-4 h-4" />
-          <span>Nouveaux</span>
+          <span>New</span>
         </button>
         
         <button
@@ -35,7 +35,7 @@ const PopularityFilter = ({ selected, onChange }: PopularityFilterProps) => {
           `}
         >
           <Trophy className="w-4 h-4" />
-          <span>Les plus joués</span>
+          <span>Most Played</span>
         </button>
         
         <button

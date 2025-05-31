@@ -22,7 +22,7 @@ const SearchBar = () => {
         <input
           type="search"
           className="w-full p-3 pl-4 pr-10 text-sm bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/50 focus:bg-white"
-          placeholder="Recherche ton jeu préféré..."
+          placeholder="Search your favorite game..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />

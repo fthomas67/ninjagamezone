@@ -57,10 +57,10 @@ const GamePage = () => {
             .slice(0, 6);
           setSimilarGames(similar);
         } else {
-          setError('Jeu non trouvé');
+          setError('Game not found');
         }
       } catch (err) {
-        setError('Erreur lors du chargement du jeu');
+        setError('Error loading game');
         console.error(err);
       }
       setLoading(false);
@@ -129,7 +129,7 @@ const GamePage = () => {
       <div className="min-h-[60vh] flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-primary border-r-transparent mb-4"></div>
-          <p className="text-gray-600">Chargement du jeu...</p>
+          <p className="text-gray-600">Loading game...</p>
         </div>
       </div>
     );
@@ -139,12 +139,12 @@ const GamePage = () => {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center text-center p-4">
         <Gamepad2 className="w-16 h-16 text-gray-400 mb-4" />
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">Oups, jeu non trouvé !</h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">Oops, game not found!</h2>
         <p className="text-gray-600 mb-6">
-          {error || "Nous n'avons pas pu trouver le jeu que tu cherches."}
+          {error || "We couldn't find the game you're looking for."}
         </p>
         <Link to="/" className="btn btn-primary">
-          Retour à l'accueil
+          Back to Home
         </Link>
       </div>
     );
@@ -212,22 +212,22 @@ const GamePage = () => {
                 <button
                   onClick={handleShare}
                   className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors relative group"
-                  aria-label="Partager"
+                  aria-label="Share"
                 >
                   <Share2 className="w-5 h-5" />
                   <span className="absolute bottom-full right-0 mb-2 px-2 py-1 text-xs font-medium text-white bg-black rounded pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                    Partager
+                    Share
                   </span>
                 </button>
                 
                 <button
                   onClick={toggleFullscreen}
                   className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors relative group"
-                  aria-label="Plein écran"
+                  aria-label="Fullscreen"
                 >
                   <Maximize2 className="w-5 h-5" />
                   <span className="absolute bottom-full right-0 mb-2 px-2 py-1 text-xs font-medium text-white bg-black rounded pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                    Plein écran
+                    Fullscreen
                   </span>
                 </button>
               </div>
@@ -236,7 +236,7 @@ const GamePage = () => {
 
           {/* Ad banner above description */}
           <div className="bg-gray-200 rounded-xl p-4 text-center mt-6">
-            <p className="text-gray-500">Espace publicitaire</p>
+            <p className="text-gray-500">Advertisement Space</p>
           </div>
 
           {/* Game info */}

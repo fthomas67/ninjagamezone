@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { categories } from '../data/categories';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { categories, popularityFilters, getFilterBySlug, getFilterSlug } from '../data/categories';
 import { PopularityFilter as PopularityFilterType } from '../types';
 import { createSlug } from '../utils/slug';
 
@@ -19,19 +19,15 @@ const Sidebar = ({
   const navigate = useNavigate();
   const location = useLocation();
   
-  // Détecter la catégorie et le filtre actuels à partir de l'URL
   const getCurrentState = () => {
     const pathParts = location.pathname.split('/').filter(Boolean);
     let currentCategory = 0;
     let currentFilter: PopularityFilterType = 'mostplayed';
 
-    // Détecter le filtre
     const filterSlug = pathParts[pathParts.length - 1];
-    if (filterSlug === 'plus-joues') currentFilter = 'mostplayed';
-    else if (filterSlug === 'mieux-notes') currentFilter = 'bestgames';
-    else if (filterSlug === 'plus-recents') currentFilter = 'newest';
+    const filter = getFilterBySlug(filterSlug);
+    if (filter) currentFilter = filter;
 
-    // Détecter la catégorie
     if (pathParts.length > 0) {
       const categorySlug = pathParts[0];
       const category = categories.find(c => createSlug(c.name) === categorySlug);
@@ -48,12 +44,9 @@ const Sidebar = ({
     if (!category) return;
 
     const categorySlug = createSlug(category.name);
-
-    // Toujours inclure le filtre actuel dans l'URL
     const filterSlug = getFilterSlug(currentFilter);
     navigate(`/${categorySlug}/${filterSlug}`);
-    
-    onClose(); // Close sidebar on mobile after selection
+    onClose();
   };
 
   const handlePopularityClick = (filter: PopularityFilterType) => {
@@ -62,35 +55,12 @@ const Sidebar = ({
     if (currentCategory > 0) {
       const category = categories.find(c => c.id === currentCategory);
       if (!category) return;
-
-      const categorySlug = createSlug(category.name);
-
-      navigate(`/${categorySlug}/${filterSlug}`);
+      navigate(`/${createSlug(category.name)}/${filterSlug}`);
     } else {
       navigate(`/${filterSlug}`);
     }
-    
-    onClose(); // Close sidebar on mobile after selection
+    onClose();
   };
-
-  const getFilterSlug = (filter: PopularityFilterType): string => {
-    switch (filter) {
-      case 'newest':
-        return 'plus-recents';
-      case 'mostplayed':
-        return 'plus-joues';
-      case 'bestgames':
-        return 'mieux-notes';
-      default:
-        return 'plus-recents';
-    }
-  };
-
-  const popularityFilters = [
-    { type: 'mostplayed', label: 'Les plus joués', icon: '🔥' },
-    { type: 'newest', label: 'Plus récents', icon: '🆕' },
-    { type: 'bestgames', label: 'Mieux notés', icon: '⭐' }
-  ];
 
   useEffect(() => {
     const nav = navRef.current;
@@ -128,13 +98,26 @@ const Sidebar = ({
       )}
 
       <aside className={`
-        fixed lg:sticky top-16 left-0 z-40 lg:z-0
+        fixed lg:sticky top-0 left-0 z-40 lg:z-0
         w-60 xl:w-64 bg-white border-r border-gray-200 
-        h-[calc(100vh-4rem)] lg:h-[calc(100vh-4rem)]
+        h-screen lg:h-screen
         flex flex-col
         transition-transform duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
+        {/* Logo section */}
+        <div className="p-4 border-b border-gray-200">
+          <Link to="/" className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+              <img src="/logo.svg" alt="NinjaGameZone" className="w-4 h-4" />
+            </div>
+            <span className="font-bold text-xl">
+              <span className="text-foreground">Ninja</span>
+              <span className="text-primary">GameZone</span>
+            </span>
+          </Link>
+        </div>
+
         <nav 
           ref={navRef}
           className={`
@@ -144,13 +127,13 @@ const Sidebar = ({
           `}
         >
           <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-            Trier par
+            Sort by
           </h3>
           <ul className="space-y-1 mb-6">
             {popularityFilters.map((filter) => (
               <li key={filter.type}>
                 <button 
-                  onClick={() => handlePopularityClick(filter.type as PopularityFilterType)}
+                  onClick={() => handlePopularityClick(filter.type)}
                   className={`nav-item w-full text-left ${currentFilter === filter.type ? 'active' : ''}`}
                 >
                   <span>{filter.icon}</span>
@@ -161,7 +144,7 @@ const Sidebar = ({
           </ul>
 
           <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-            Catégories
+            Categories
           </h3>
           <ul className="space-y-1">
             {categories.map((category) => (

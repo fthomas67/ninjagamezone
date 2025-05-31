@@ -9,26 +9,26 @@ const FilterPage = ({ filter }: FilterPageProps) => {
   const getFilterTitle = () => {
     switch (filter) {
       case 'newest':
-        return 'Jeux les plus récents';
+        return 'Latest Games';
       case 'mostplayed':
-        return 'Jeux les plus joués';
+        return 'Most Played Games';
       case 'bestgames':
-        return 'Jeux les mieux notés';
+        return 'Best Rated Games';
       default:
-        return 'Jeux populaires';
+        return 'Popular Games';
     }
   };
 
   const getFilterDescription = () => {
     switch (filter) {
       case 'newest':
-        return 'Découvre les derniers jeux ajoutés sur NinjaGameZone.';
+        return 'Discover the latest games added to NinjaGameZone.';
       case 'mostplayed':
-        return 'Les jeux les plus populaires et les plus joués par notre communauté.';
+        return 'The most popular and most played games by our community.';
       case 'bestgames':
-        return 'Les jeux les mieux notés et les plus appréciés par les joueurs.';
+        return 'The highest rated and most appreciated games by players.';
       default:
-        return 'Les jeux les plus populaires du moment.';
+        return 'The most popular games right now.';
     }
   };
 
@@ -46,7 +46,7 @@ const FilterPage = ({ filter }: FilterPageProps) => {
       
       {/* Ad banner above game grid */}
       <div className="w-full bg-gray-200 rounded-xl p-4 mb-6 text-center">
-        <p className="text-gray-500">Espace publicitaire</p>
+        <p className="text-gray-500">Advertisement Space</p>
       </div>
       
       <GameGrid
@@ -55,7 +55,7 @@ const FilterPage = ({ filter }: FilterPageProps) => {
       
       {/* Ad banner below game grid */}
       <div className="w-full bg-gray-200 rounded-xl p-4 mt-8 text-center">
-        <p className="text-gray-500">Espace publicitaire</p>
+        <p className="text-gray-500">Advertisement Space</p>
       </div>
     </div>
   );

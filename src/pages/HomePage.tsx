@@ -50,18 +50,18 @@ const HomePage = () => {
 
   const getFilterTitle = () => {
     const category = categories.find(c => c.id === selectedCategory);
-    const categoryName = category ? category.name : 'Tous les jeux';
+    const categoryName = category ? category.name : 'All games';
     
     let filterName = '';
     switch (popularityFilter) {
       case 'newest':
-        filterName = 'plus récents';
+        filterName = 'newest';
         break;
       case 'mostplayed':
-        filterName = 'plus joués';
+        filterName = 'most played';
         break;
       default:
-        filterName = 'populaires';
+        filterName = 'popular';
     }
     
     return `${categoryName} ${filterName}`;
@@ -69,18 +69,18 @@ const HomePage = () => {
 
   const getPageTitle = () => {
     if (searchQuery) {
-      return `Résultats pour "${searchQuery}"`;
+      return `Results for "${searchQuery}"`;
     }
     
-    return "Jeux gratuits en ligne - Jouez maintenant !";
+    return "Free Online Games - Play Now!";
   };
 
   const getPageDescription = () => {
     if (searchQuery) {
-      return `Découvre tous les jeux qui correspondent à ta recherche.`;
+      return `Discover all games matching your search.`;
     }
     
-    return "Découvre notre sélection des meilleurs jeux gratuits en ligne. Des centaines de jeux de qualité, jouables directement dans ton navigateur. Action, aventure, puzzle, sport et bien plus encore !";
+    return "Discover our selection of the best free online games. Hundreds of quality games, playable directly in your browser. Action, adventure, puzzle, sports and much more!";
   };
 
   return (
@@ -97,7 +97,7 @@ const HomePage = () => {
       
       {/* Ad banner above game grid */}
       <div className="w-full bg-gray-200 rounded-xl p-4 mb-6 text-center">
-        <p className="text-gray-500">Espace publicitaire</p>
+        <p className="text-gray-500">Advertisement Space</p>
       </div>
       
       <GameGrid
@@ -108,7 +108,7 @@ const HomePage = () => {
       
       {/* Ad banner below game grid */}
       <div className="w-full bg-gray-200 rounded-xl p-4 mt-8 text-center">
-        <p className="text-gray-500">Espace publicitaire</p>
+        <p className="text-gray-500">Advertisement Space</p>
       </div>
     </div>
   );
