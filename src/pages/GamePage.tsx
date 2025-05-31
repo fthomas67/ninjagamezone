@@ -49,7 +49,7 @@ const GamePage = () => {
             
           if (gameSlug !== correctSlug) {
             // Redirect to the correct URL if slug doesn't match
-            navigate(`/jeu/${foundGame.id}/${correctSlug}`, { replace: true });
+            navigate(`/game/${foundGame.id}/${correctSlug}`, { replace: true });
             return;
           }
           
@@ -299,7 +299,7 @@ const GamePage = () => {
                 return (
                   <Link
                     key={similarGame.id}
-                    to={`/jeu/${similarGame.id}/${similarGameSlug}`}
+                    to={`/game/${similarGame.id}/${similarGameSlug}`}
                     className="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors"
                   >
                     <div className="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden">

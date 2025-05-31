@@ -8,7 +8,7 @@ interface GameCardProps {
 
 const GameCard = ({ game }: GameCardProps) => {
   const titleSlug = createSlug(game.title);
-  const gameUrl = `/jeu/${game.id}/${titleSlug}`;
+  const gameUrl = `/game/${game.id}/${titleSlug}`;
   
   return (
     <Link

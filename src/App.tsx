@@ -12,7 +12,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
-        <Route path="/jeu/:gameId/:gameSlug" element={<GamePage />} />
+        <Route path="/game/:gameId/:gameSlug" element={<GamePage />} />
         <Route path="/legal-notice" element={<LegalNoticePage />} />
         
         {/* Global filter routes */}
