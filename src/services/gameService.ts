@@ -191,7 +191,34 @@ export const fetchGameBySlug = async (slug: string): Promise<Game | null> => {
   try {
     // Chercher dans les deux sources de données
     const game = [...typedNewestGames, ...typedMostplayedGames].find((g: GameData) => g.id === slug);
-    return game ? transformGameData(game) : null;
+    
+    if (!game) return null;
+
+    // Trouver des jeux similaires basés sur les tags
+    const gameTags = game.tags.toLowerCase().split(', ');
+    const allGames = [...typedNewestGames, ...typedMostplayedGames];
+    
+    // Calculer un score de similarité pour chaque jeu
+    const similarGames = allGames
+      .filter(g => g.id !== game.id) // Exclure le jeu actuel
+      .map(g => {
+        const gTags = g.tags.toLowerCase().split(', ');
+        // Calculer le nombre de tags en commun
+        const commonTags = gameTags.filter(tag => gTags.includes(tag));
+        return {
+          game: g,
+          score: commonTags.length
+        };
+      })
+      .filter(g => g.score > 0) // Ne garder que les jeux avec au moins un tag en commun
+      .sort((a, b) => b.score - a.score) // Trier par score décroissant
+      .slice(0, 5) // Prendre les 5 meilleurs
+      .map(g => transformGameData(g.game));
+
+    const transformedGame = transformGameData(game);
+    transformedGame.similarGames = similarGames;
+
+    return transformedGame;
   } catch (error) {
     console.error('Error fetching game:', error);
     return null;

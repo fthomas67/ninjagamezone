@@ -13,6 +13,7 @@ export interface Game {
   instructions?: string;
   width?: string;
   height?: string;
+  similarGames?: Game[];
 }
 
 export interface GameResponse {

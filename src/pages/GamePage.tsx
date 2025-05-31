@@ -54,12 +54,10 @@ const GamePage = () => {
             console.log('No game dimensions found, using default 16:9 ratio');
           }
           
-          // Get similar games from the same category
-          const allGames = await getMockGames(50);
-          const similar = allGames
-            .filter(g => g.id !== foundGame.id && g.category === foundGame.category)
-            .slice(0, 6);
-          setSimilarGames(similar);
+          // Utiliser les jeux similaires retournés par fetchGameBySlug
+          if (foundGame.similarGames) {
+            setSimilarGames(foundGame.similarGames);
+          }
         } else {
           setError('Game not found');
         }
