@@ -16,7 +16,16 @@ const Layout = () => {
         />
         <div className="flex-1 flex flex-col min-h-screen">
           {/* Mobile header with hamburger button */}
-          <div className="lg:hidden p-4 border-b border-gray-200">
+          <div className="lg:hidden p-4 border-b border-gray-200 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                <img src="/logo.svg" alt="NinjaGameZone" className="w-4 h-4" />
+              </div>
+              <span className="font-bold text-xl">
+                <span className="text-foreground">Ninja</span>
+                <span className="text-primary">GameZone</span>
+              </span>
+            </div>
             <button
               onClick={() => setIsSidebarOpen(true)}
               className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg transition-colors"
