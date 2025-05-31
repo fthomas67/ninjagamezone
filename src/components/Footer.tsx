@@ -17,10 +17,7 @@ const Footer = () => {
           </div>
           
           <div className="flex gap-6">
-            <Link to="/" className="text-gray-600 hover:text-primary">Home</Link>
             <Link to="/legal-notice" className="text-gray-600 hover:text-primary">Legal Notice</Link>
-            <Link to="/cookie-policy" className="text-gray-600 hover:text-primary">Cookies</Link>
-            <Link to="/about" className="text-gray-600 hover:text-primary">About</Link>
           </div>
         </div>
         

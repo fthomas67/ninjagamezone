@@ -5,6 +5,7 @@ import GamePage from './pages/GamePage';
 import NotFoundPage from './pages/NotFoundPage';
 import CategoryPage from './pages/CategoryPage';
 import FilterPage from './pages/FilterPage';
+import LegalNoticePage from './pages/LegalNoticePage';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="/jeu/:gameId/:gameSlug" element={<GamePage />} />
+        <Route path="/legal-notice" element={<LegalNoticePage />} />
         
         {/* Global filter routes */}
         <Route path="/most-played" element={<FilterPage filter="mostplayed" />} />
