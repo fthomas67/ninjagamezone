@@ -18,6 +18,7 @@ export interface Game {
 export interface GameResponse {
   games: Game[];
   total: number;
+  message?: string;
 }
 
 export type PopularityFilter = 'newest' | 'mostplayed' | 'hotgames' | 'bestgames';

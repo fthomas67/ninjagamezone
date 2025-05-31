@@ -3,6 +3,11 @@ import newestGamesData from '../data/gamemonetize_newest.json';
 import mostplayedGamesData from '../data/gamemonetize_mostplayed.json';
 import bestGamesData from '../data/gamemonetize_bestgames.json';
 
+// Forcer le typage des données JSON
+const typedNewestGames = newestGamesData as GameData[];
+const typedMostplayedGames = mostplayedGamesData as GameData[];
+const typedBestGames = bestGamesData as GameData[];
+
 interface GameData {
   id: string;
   title: string;
@@ -94,13 +99,13 @@ const getCategoryNameFromId = (categoryId: number): string => {
 const getGamesData = (popularity: PopularityFilter): GameData[] => {
   switch (popularity) {
     case 'newest':
-      return newestGamesData;
+      return typedNewestGames;
     case 'mostplayed':
-      return mostplayedGamesData;
+      return typedMostplayedGames;
     case 'bestgames':
-      return bestGamesData;
+      return typedBestGames;
     default:
-      return mostplayedGamesData; // Par défaut, retourner les plus joués
+      return typedMostplayedGames; // Par défaut, retourner les plus joués
   }
 };
 
@@ -117,7 +122,46 @@ export const fetchGames = async (
     // Filtrer par catégorie si spécifié
     if (categoryId && categoryId > 0) {
       const categoryName = getCategoryNameFromId(categoryId);
-      filteredGames = filteredGames.filter((game: GameData) => game.category === categoryName);
+      
+      // Gérer les variations de noms pour certaines catégories
+      const categoryVariations: { [key: string]: string[] } = {
+        '2 Players': ['2 Player', '2 Players', '2 Player Games'],
+        'Puzzle': ['Puzzle', 'Puzzles'],
+        'Sports': ['Sports', 'Sport'],
+        'Football': ['Football', 'Soccer'],
+        'Shooting': ['Shooting', 'Shooter', 'Shoot'],
+        'Racing': ['Racing', 'Race'],
+        'Action': ['Action', 'Adventure'],
+        'Arcade': ['Arcade', 'Arcade Games'],
+        '3D': ['3D', '3D Games'],
+        'Multiplayer': ['Multiplayer', 'Multiplayer Games']
+      };
+
+      const variations = categoryVariations[categoryName] || [categoryName];
+      
+      filteredGames = filteredGames.filter((game: GameData) => {
+        // Vérifier la catégorie principale
+        if (game.category === categoryName) return true;
+        
+        // Vérifier les tags avec les variations
+        if (game.tags) {
+          const tags = game.tags.toLowerCase();
+          return variations.some(variation => 
+            tags.includes(variation.toLowerCase())
+          );
+        }
+        return false;
+      });
+      
+      // Vérifier si la catégorie a des données
+      if (filteredGames.length === 0) {
+        console.warn(`Aucun jeu trouvé pour la catégorie: ${categoryName}`);
+        return {
+          games: [],
+          total: 0,
+          message: `Aucun jeu disponible dans la catégorie ${categoryName} pour le moment.`
+        };
+      }
     }
     
     // Transformer les données
@@ -129,11 +173,16 @@ export const fetchGames = async (
     
     return {
       games: transformedGames.slice(startIndex, endIndex),
-      total: transformedGames.length
+      total: transformedGames.length,
+      message: transformedGames.length === 0 ? 'Aucun jeu trouvé.' : undefined
     };
   } catch (error) {
     console.error('Error fetching games:', error);
-    return { games: [], total: 0 };
+    return { 
+      games: [], 
+      total: 0,
+      message: 'Une erreur est survenue lors de la récupération des jeux.'
+    };
   }
 };
 
@@ -141,7 +190,7 @@ export const fetchGames = async (
 export const fetchGameBySlug = async (slug: string): Promise<Game | null> => {
   try {
     // Chercher dans les deux sources de données
-    const game = [...newestGamesData, ...mostplayedGamesData].find((g: GameData) => g.id === slug);
+    const game = [...typedNewestGames, ...typedMostplayedGames].find((g: GameData) => g.id === slug);
     return game ? transformGameData(game) : null;
   } catch (error) {
     console.error('Error fetching game:', error);
@@ -154,7 +203,7 @@ export const searchGames = async (keyword: string): Promise<Game[]> => {
   try {
     const searchTerm = keyword.toLowerCase();
     // Chercher dans les deux sources de données
-    const allGames = [...newestGamesData, ...mostplayedGamesData];
+    const allGames = [...typedNewestGames, ...typedMostplayedGames];
     const filteredGames = allGames.filter((game: GameData) => 
       game.title.toLowerCase().includes(searchTerm) ||
       game.description.toLowerCase().includes(searchTerm) ||
@@ -172,7 +221,7 @@ export const searchGames = async (keyword: string): Promise<Game[]> => {
 export const getMockGames = async (count = 20): Promise<Game[]> => {
   try {
     // Utiliser les jeux les plus récents par défaut
-    return newestGamesData
+    return typedNewestGames
       .map(transformGameData)
       .slice(0, count);
   } catch (error) {
