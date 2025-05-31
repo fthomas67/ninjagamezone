@@ -19,6 +19,22 @@ const GamePage = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  // Update page title and meta description when game changes
+  useEffect(() => {
+    if (game) {
+      // Update page title
+      document.title = `${game.title} - Play Free Online Game | NinjaGameZone`;
+      
+      // Update meta description
+      const metaDescription = document.querySelector('meta[name="description"]');
+      if (metaDescription) {
+        metaDescription.setAttribute('content', 
+          `Play ${game.title} online for free. ${game.description.substring(0, 120)}...`
+        );
+      }
+    }
+  }, [game]);
+
   useEffect(() => {
     const loadGame = async () => {
       if (!gameId) return;
