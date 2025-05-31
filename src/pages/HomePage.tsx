@@ -11,7 +11,7 @@ const HomePage = () => {
   const searchQuery = searchParams.get('search') || '';
   
   const [selectedCategory, setSelectedCategory] = useState(0);
-  const [popularityFilter, setPopularityFilter] = useState<PopularityFilterType>('newest');
+  const [popularityFilter, setPopularityFilter] = useState<PopularityFilterType>('mostplayed');
   
   useEffect(() => {
     const categoryParam = searchParams.get('category');
