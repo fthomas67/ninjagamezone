@@ -16,6 +16,10 @@ const GamePage = () => {
   const [iframeSize, setIframeSize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     const loadGame = async () => {
       if (!gameId) return;
       
