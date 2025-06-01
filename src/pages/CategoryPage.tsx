@@ -30,24 +30,24 @@ const CategoryPage = ({ filter = 'newest' }: CategoryPageProps) => {
     let filterName = '';
     switch (filter) {
       case 'newest':
-        filterName = 'newest';
+        filterName = 'Newest';
         break;
       case 'mostplayed':
-        filterName = 'most played';
+        filterName = 'Most played';
         break;
       case 'bestgames':
-        filterName = 'best rated';
+        filterName = 'Best rated';
         break;
       case 'bestonmobile':
-        filterName = 'best on mobile';
+        filterName = 'Best on mobile';
         break;
       default:
-        filterName = 'most popular';
+        filterName = 'Most popular';
     }
     
     return category.name === 'All Games' 
       ? `${category.name} ${filterName}`
-      : `${category.name} Games ${filterName}`;
+      : `${filterName} ${category.name} Games`;
   };
 
   const getFilterDescription = () => {
