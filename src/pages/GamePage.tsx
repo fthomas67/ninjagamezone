@@ -4,6 +4,7 @@ import { fetchGameBySlug, getMockGames } from '../services/gameService';
 import { Game } from '../types';
 import { Maximize2, Share2, Gamepad2 } from 'lucide-react';
 import { createSlug } from '../utils/slug';
+import { Helmet } from 'react-helmet-async';
 
 const GamePage = () => {
   const { gameId, gameSlug } = useParams<{ gameId: string; gameSlug: string }>();
@@ -25,13 +26,51 @@ const GamePage = () => {
       // Update page title
       document.title = `${game.title} - Play Free Online Game | NinjaGameZone`;
       
+      // Update meta tags
+      const metaTags = {
+        description: `Play ${game.title} online for free. ${game.description.substring(0, 120)}...`,
+        keywords: `${game.title}, online game, free game, browser game, ${game.category || 'arcade'}, play online`,
+        ogTitle: `${game.title} - Play Free Online Game | NinjaGameZone`,
+        ogDescription: `Play ${game.title} online for free. ${game.description.substring(0, 120)}...`,
+        ogImage: game.thumbnail || '/logo.svg',
+        ogUrl: window.location.href,
+        twitterCard: 'summary_large_image',
+      };
+
       // Update meta description
       const metaDescription = document.querySelector('meta[name="description"]');
       if (metaDescription) {
-        metaDescription.setAttribute('content', 
-          `Play ${game.title} online for free. ${game.description.substring(0, 120)}...`
-        );
+        metaDescription.setAttribute('content', metaTags.description);
       }
+
+      // Add JSON-LD structured data
+      const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'VideoGame',
+        name: game.title,
+        description: game.description,
+        genre: game.category,
+        gamePlatform: 'Web Browser',
+        applicationCategory: 'Game',
+        offers: {
+          '@type': 'Offer',
+          price: '0',
+          priceCurrency: 'USD',
+          availability: 'https://schema.org/InStock'
+        }
+      };
+
+      // Remove existing JSON-LD if any
+      const existingJsonLd = document.querySelector('script[type="application/ld+json"]');
+      if (existingJsonLd) {
+        existingJsonLd.remove();
+      }
+
+      // Add new JSON-LD
+      const script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.text = JSON.stringify(jsonLd);
+      document.head.appendChild(script);
     }
   }, [game]);
 
@@ -169,163 +208,191 @@ const GamePage = () => {
   }
   
   return (
-    <div className="fade-in -mt-6 -mx-4 md:-mx-6 lg:-mx-8">
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 p-4 md:p-6 lg:p-8">
-        {/* Main content - Game and Description */}
-        <div className="lg:col-span-3">
-          {/* Game container */}
-          <div 
-            id="game-container" 
-            className={`
-              relative bg-black rounded-xl overflow-hidden
-              ${isFullscreen ? 'fixed inset-0 z-50' : ''}
-            `}
-          >
-            {(() => {
-              const ratio = game?.width && game?.height 
-                ? `${parseInt(game.width)}/${parseInt(game.height)}`
-                : '16/9';
-              
-              console.log('Current game dimensions:', {
-                width: game?.width,
-                height: game?.height,
-                ratio
-              });
-
-              return (
-                <div 
-                  className="max-h-[80vh] mx-auto"
-                  style={{ aspectRatio: ratio }}
-                >
-                  <iframe
-                    src={game.url}
-                    title={game.title}
-                    className="w-full h-full"
-                    style={{
-                      width: isFullscreen ? '100vw' : '100%',
-                      height: isFullscreen ? '100vh' : '100%',
-                      border: 'none',
-                      objectFit: 'contain'
-                    }}
-                    allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; interest-cohort"
-                    loading="lazy"
-                    scrolling="no"
-                    sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-presentation allow-popups-to-escape-sandbox"
-                    referrerPolicy="origin"
-                  ></iframe>
-                </div>
-              );
-            })()}
+    <>
+      <Helmet>
+        {game && (
+          <>
+            <title>{`${game.title} - Play Free Online Game | NinjaGameZone`}</title>
+            <meta name="description" content={`Play ${game.title} online for free. ${game.description.substring(0, 120)}...`} />
+            <meta name="keywords" content={`${game.title}, online game, free game, browser game, ${game.category || 'arcade'}, play online`} />
             
-            {/* Game controls bar */}
-            <div className={`bg-black/90 backdrop-blur-sm p-2 flex items-center justify-between ${isFullscreen ? 'hidden' : ''}`}>
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                  <img src="/logo.svg" alt="NinjaGameZone" className="w-4 h-4" />
-                </div>
-                <h1 className="text-white font-medium line-clamp-1">{game.title}</h1>
-              </div>
-              
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={handleShare}
-                  className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors relative group"
-                  aria-label="Share"
-                >
-                  <Share2 className="w-5 h-5" />
-                  <span className="absolute bottom-full right-0 mb-2 px-2 py-1 text-xs font-medium text-white bg-black rounded pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                    Share
-                  </span>
-                </button>
+            {/* Open Graph / Facebook */}
+            <meta property="og:type" content="website" />
+            <meta property="og:title" content={`${game.title} - Play Free Online Game | NinjaGameZone`} />
+            <meta property="og:description" content={`Play ${game.title} online for free. ${game.description.substring(0, 120)}...`} />
+            <meta property="og:image" content={game.thumbnail || '/logo.svg'} />
+            <meta property="og:url" content={window.location.href} />
+            
+            {/* Twitter */}
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:title" content={`${game.title} - Play Free Online Game | NinjaGameZone`} />
+            <meta name="twitter:description" content={`Play ${game.title} online for free. ${game.description.substring(0, 120)}...`} />
+            <meta name="twitter:image" content={game.thumbnail || '/logo.svg'} />
+            
+            {/* Canonical URL */}
+            <link rel="canonical" href={window.location.href} />
+          </>
+        )}
+      </Helmet>
+
+      <div className="fade-in -mt-6 -mx-4 md:-mx-6 lg:-mx-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 p-4 md:p-6 lg:p-8">
+          {/* Main content - Game and Description */}
+          <main className="lg:col-span-3">
+            {/* Game container */}
+            <article 
+              id="game-container" 
+              className={`
+                relative bg-black rounded-xl overflow-hidden
+                ${isFullscreen ? 'fixed inset-0 z-50' : ''}
+              `}
+            >
+              {(() => {
+                const ratio = game?.width && game?.height 
+                  ? `${parseInt(game.width)}/${parseInt(game.height)}`
+                  : '16/9';
                 
-                <button
-                  onClick={toggleFullscreen}
-                  className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors relative group"
-                  aria-label="Fullscreen"
-                >
-                  <Maximize2 className="w-5 h-5" />
-                  <span className="absolute bottom-full right-0 mb-2 px-2 py-1 text-xs font-medium text-white bg-black rounded pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                    Fullscreen
+                console.log('Current game dimensions:', {
+                  width: game?.width,
+                  height: game?.height,
+                  ratio
+                });
+
+                return (
+                  <div 
+                    className="max-h-[80vh] mx-auto"
+                    style={{ aspectRatio: ratio }}
+                  >
+                    <iframe
+                      src={game.url}
+                      title={game.title}
+                      className="w-full h-full"
+                      style={{
+                        width: isFullscreen ? '100vw' : '100%',
+                        height: isFullscreen ? '100vh' : '100%',
+                        border: 'none',
+                        objectFit: 'contain'
+                      }}
+                      allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; interest-cohort"
+                      loading="lazy"
+                      scrolling="no"
+                      sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-presentation allow-popups-to-escape-sandbox"
+                      referrerPolicy="origin"
+                    ></iframe>
+                  </div>
+                );
+              })()}
+              
+              {/* Game controls bar */}
+              <div className={`bg-black/90 backdrop-blur-sm p-2 flex items-center justify-between ${isFullscreen ? 'hidden' : ''}`}>
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                    <img src="/logo.svg" alt="NinjaGameZone Logo" className="w-4 h-4" />
+                  </div>
+                  <h1 className="text-white font-medium line-clamp-1">{game.title}</h1>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleShare}
+                    className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors relative group"
+                    aria-label="Share"
+                  >
+                    <Share2 className="w-5 h-5" />
+                    <span className="absolute bottom-full right-0 mb-2 px-2 py-1 text-xs font-medium text-white bg-black rounded pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                      Share
+                    </span>
+                  </button>
+                  
+                  <button
+                    onClick={toggleFullscreen}
+                    className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors relative group"
+                    aria-label="Fullscreen"
+                  >
+                    <Maximize2 className="w-5 h-5" />
+                    <span className="absolute bottom-full right-0 mb-2 px-2 py-1 text-xs font-medium text-white bg-black rounded pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                      Fullscreen
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            {/* Game info */}
+            <div className="bg-white rounded-xl shadow-md overflow-hidden mt-6 p-6">
+              <h2 className="text-2xl font-bold mb-4">{game.title}</h2>
+              
+              <div className="flex flex-wrap gap-2 mb-4">
+                <span className="bg-primary/10 text-primary text-sm px-2 py-1 rounded-full">
+                  {game.categoryName}
+                </span>
+                
+                {game.tags.map((tag, index) => (
+                  <span 
+                    key={index}
+                    className="bg-gray-100 text-gray-700 text-sm px-2 py-1 rounded-full"
+                  >
+                    {tag}
                   </span>
-                </button>
+                ))}
+              </div>
+              
+              <div className="prose prose-sm max-w-none">
+                {game.instructions && (
+                  <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-100">
+                    <h3 className="font-bold mb-2">Instructions</h3>
+                    <p className="text-gray-600">{game.instructions}</p>
+                  </div>
+                )}
+                
+                <p className="text-gray-600 whitespace-pre-line">{game.description}</p>
               </div>
             </div>
-          </div>
+          </main>
 
-          {/* Game info */}
-          <div className="bg-white rounded-xl shadow-md overflow-hidden mt-6 p-6">
-            <h2 className="text-2xl font-bold mb-4">{game.title}</h2>
-            
-            <div className="flex flex-wrap gap-2 mb-4">
-              <span className="bg-primary/10 text-primary text-sm px-2 py-1 rounded-full">
-                {game.categoryName}
-              </span>
-              
-              {game.tags.map((tag, index) => (
-                <span 
-                  key={index}
-                  className="bg-gray-100 text-gray-700 text-sm px-2 py-1 rounded-full"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-            
-            <div className="prose prose-sm max-w-none">
-              {game.instructions && (
-                <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-100">
-                  <h3 className="font-bold mb-2">Instructions</h3>
-                  <p className="text-gray-600">{game.instructions}</p>
-                </div>
-              )}
-              
-              <p className="text-gray-600 whitespace-pre-line">{game.description}</p>
-            </div>
-          </div>
-        </div>
+          {/* Sidebar - Ad and Similar Games */}
+          <div className="lg:col-span-1 space-y-6">
 
-        {/* Sidebar - Ad and Similar Games */}
-        <div className="lg:col-span-1 space-y-6">
-
-          {/* Similar games */}
-          <div className="bg-white rounded-xl shadow-md overflow-hidden">
-            <h3 className="text-lg font-bold p-4 border-b border-gray-100">
-              Similar Games
-            </h3>
-            <div className="divide-y divide-gray-100">
-              {similarGames.map(similarGame => {
-                const similarGameSlug = createSlug(similarGame.title);
-                  
-                return (
-                  <Link
-                    key={similarGame.id}
-                    to={`/game/${similarGame.id}/${similarGameSlug}`}
-                    className="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors"
-                  >
-                    <div className="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden">
-                      <img
-                        src={similarGame.thumbnail}
-                        alt={similarGame.title}
-                        className="w-full h-full object-cover"
-                        loading="lazy"
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-sm line-clamp-2">
-                        {similarGame.title}
-                      </h4>
-                      <span className="text-xs text-gray-500">
-                        {similarGame.categoryName}
-                      </span>
-                    </div>
-                  </Link>
-                );
-              })}
+            {/* Similar games */}
+            <div className="bg-white rounded-xl shadow-md overflow-hidden">
+              <h3 className="text-lg font-bold p-4 border-b border-gray-100">
+                Similar Games
+              </h3>
+              <div className="divide-y divide-gray-100">
+                {similarGames.map(similarGame => {
+                  const similarGameSlug = createSlug(similarGame.title);
+                    
+                  return (
+                    <Link
+                      key={similarGame.id}
+                      to={`/game/${similarGame.id}/${similarGameSlug}`}
+                      className="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors"
+                    >
+                      <div className="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden">
+                        <img
+                          src={similarGame.thumbnail}
+                          alt={similarGame.title}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-medium text-sm line-clamp-2">
+                          {similarGame.title}
+                        </h4>
+                        <span className="text-xs text-gray-500">
+                          {similarGame.categoryName}
+                        </span>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
