@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
 import ScrollToTop from './ScrollToTop';
@@ -8,6 +8,15 @@ import { Menu } from 'lucide-react';
 
 const Layout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    // Track page view conversion
+    if (window.gtag) {
+      window.gtag('event', 'conversion', {
+        'send_to': 'AW-715632083/UxLXCK21pdEaENPbntUC'
+      });
+    }
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col">
