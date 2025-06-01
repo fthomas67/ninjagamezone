@@ -194,7 +194,7 @@ const GamePage = () => {
 
               return (
                 <div 
-                  className="max-h-[80vh]"
+                  className="max-h-[80vh] mx-auto"
                   style={{ aspectRatio: ratio }}
                 >
                   <iframe
