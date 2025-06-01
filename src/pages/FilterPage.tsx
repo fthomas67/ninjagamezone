@@ -28,6 +28,8 @@ const FilterPage = ({ filter }: FilterPageProps) => {
         return 'The most popular and most played games by our community.';
       case 'bestgames':
         return 'The highest rated and most appreciated games by players.';
+      case 'bestonmobile':
+        return 'The best games for mobile devices.';
       default:
         return 'The most popular games right now.';
     }

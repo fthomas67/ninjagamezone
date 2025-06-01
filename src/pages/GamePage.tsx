@@ -2,9 +2,25 @@ import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { fetchGameBySlug, getMockGames } from '../services/gameService';
 import { Game } from '../types';
-import { Maximize2, Share2, Gamepad2 } from 'lucide-react';
+import { Maximize2, Share2, Gamepad2, AlertTriangle, X } from 'lucide-react';
 import { createSlug } from '../utils/slug';
 import { Helmet } from 'react-helmet-async';
+import bestOnMobileGamesData from '../data/gamemonetize_bestonmobile.json';
+
+interface GameData {
+  id: string;
+  title: string;
+  description: string;
+  url: string;
+  thumb: string;
+  category: string;
+  tags: string;
+  width: string;
+  height: string;
+  instructions: string;
+}
+
+const typedBestOnMobileGames = bestOnMobileGamesData as GameData[];
 
 const GamePage = () => {
   const { gameId, gameSlug } = useParams<{ gameId: string; gameSlug: string }>();
@@ -15,10 +31,31 @@ const GamePage = () => {
   const [error, setError] = useState('');
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [iframeSize, setIframeSize] = useState({ width: 0, height: 0 });
+  const [isMobile, setIsMobile] = useState(false);
+  const [isMobileOptimized, setIsMobileOptimized] = useState(false);
+  const [showMobileWarning, setShowMobileWarning] = useState(true);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  // Détecter si l'appareil est mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Vérifier si le jeu est optimisé pour mobile
+  useEffect(() => {
+    if (game) {
+      const isOptimized = typedBestOnMobileGames.some((g: GameData) => g.id === game.id);
+      setIsMobileOptimized(isOptimized);
+    }
+  }, [game]);
 
   // Update page title and meta description when game changes
   useEffect(() => {
@@ -247,6 +284,24 @@ const GamePage = () => {
                 ${isFullscreen ? 'fixed inset-0 z-50' : ''}
               `}
             >
+              {isMobile && !isMobileOptimized && showMobileWarning && (
+                <div className="absolute top-0 left-0 right-0 bg-primary/90 text-white p-3 z-10 flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="w-5 h-5" />
+                    <p className="text-sm">
+                      This game is not optimized for mobile and may not work correctly on your device.
+                    </p>
+                  </div>
+                  <button 
+                    onClick={() => setShowMobileWarning(false)}
+                    className="p-1 hover:bg-white/10 rounded-full transition-colors"
+                    aria-label="Close warning"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+
               {(() => {
                 const ratio = game?.width && game?.height 
                   ? `${parseInt(game.width)}/${parseInt(game.height)}`

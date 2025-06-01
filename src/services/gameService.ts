@@ -2,11 +2,13 @@ import { Game, GameResponse, PopularityFilter } from '../types';
 import newestGamesData from '../data/gamemonetize_newest.json';
 import mostplayedGamesData from '../data/gamemonetize_mostplayed.json';
 import bestGamesData from '../data/gamemonetize_bestgames.json';
+import bestOnMobileGamesData from '../data/gamemonetize_bestonmobile.json';
 
 // Forcer le typage des données JSON
 const typedNewestGames = newestGamesData as GameData[];
 const typedMostplayedGames = mostplayedGamesData as GameData[];
 const typedBestGames = bestGamesData as GameData[];
+const typedBestOnMobileGames = bestOnMobileGamesData as GameData[];
 
 interface GameData {
   id: string;
@@ -104,8 +106,10 @@ const getGamesData = (popularity: PopularityFilter): GameData[] => {
       return typedMostplayedGames;
     case 'bestgames':
       return typedBestGames;
+    case 'bestonmobile':
+      return typedBestOnMobileGames;
     default:
-      return typedMostplayedGames; // Par défaut, retourner les plus joués
+      return typedMostplayedGames;
   }
 };
 

@@ -1,5 +1,5 @@
 import { PopularityFilter as PopularityFilterType } from '../types';
-import { Sparkles, Flame, Trophy } from 'lucide-react';
+import { Sparkles, Flame, Trophy, Smartphone } from 'lucide-react';
 
 interface PopularityFilterProps {
   selected: PopularityFilterType;
@@ -37,18 +37,31 @@ const PopularityFilter = ({ selected, onChange }: PopularityFilterProps) => {
           <Trophy className="w-4 h-4" />
           <span>Most Played</span>
         </button>
-        
+
         <button
-          onClick={() => onChange('hotgames')}
+          onClick={() => onChange('bestonmobile')}
           className={`
             px-3 py-1.5 rounded-full text-sm font-medium transition-colors flex items-center gap-1
-            ${selected === 'hotgames' 
+            ${selected === 'bestonmobile' 
+              ? 'bg-primary text-white' 
+              : 'bg-gray-100 hover:bg-gray-200 text-gray-800'}
+          `}
+        >
+          <Smartphone className="w-4 h-4" />
+          <span>Best on Mobile</span>
+        </button>
+        
+        <button
+          onClick={() => onChange('bestgames')}
+          className={`
+            px-3 py-1.5 rounded-full text-sm font-medium transition-colors flex items-center gap-1
+            ${selected === 'bestgames' 
               ? 'bg-primary text-white' 
               : 'bg-gray-100 hover:bg-gray-200 text-gray-800'}
           `}
         >
           <Flame className="w-4 h-4" />
-          <span>Hot</span>
+          <span>Best Rated</span>
         </button>
       </div>
     </div>

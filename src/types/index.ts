@@ -22,7 +22,7 @@ export interface GameResponse {
   message?: string;
 }
 
-export type PopularityFilter = 'newest' | 'mostplayed' | 'hotgames' | 'bestgames';
+export type PopularityFilter = 'newest' | 'mostplayed' | 'hotgames' | 'bestgames' | 'bestonmobile';
 
 export interface Category {
   id: number;

@@ -38,6 +38,9 @@ const CategoryPage = ({ filter = 'newest' }: CategoryPageProps) => {
       case 'bestgames':
         filterName = 'best rated';
         break;
+      case 'bestonmobile':
+        filterName = 'best on mobile';
+        break;
       default:
         filterName = 'most popular';
     }
@@ -55,6 +58,8 @@ const CategoryPage = ({ filter = 'newest' }: CategoryPageProps) => {
         return `${baseDescription} The latest games added to this category.`;
       case 'mostplayed':
         return `${baseDescription} The most popular games in this category.`;
+      case 'bestonmobile':
+        return `${baseDescription} The best games for mobile devices.`;
       case 'bestgames':
         return `${baseDescription} The highest rated games in this category.`;
       default:

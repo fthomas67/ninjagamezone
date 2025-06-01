@@ -2,6 +2,7 @@ import { Category, PopularityFilter } from '../types';
 
 export const popularityFilters: { type: PopularityFilter; label: string; icon: string; slug: string }[] = [
   { type: 'mostplayed', label: 'Most Played', icon: '🔥', slug: 'most-played' },
+  { type: 'bestonmobile', label: 'Best on Mobile', icon: '📱', slug: 'best-on-mobile' },
   { type: 'newest', label: 'Newest', icon: '🆕', slug: 'newest' },
   { type: 'bestgames', label: 'Best Rated', icon: '⭐', slug: 'best-rated' }
 ];

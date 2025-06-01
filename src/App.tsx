@@ -23,6 +23,7 @@ function App() {
           <Route path="/most-played" element={<FilterPage filter="mostplayed" />} />
           <Route path="/newest" element={<FilterPage filter="newest" />} />
           <Route path="/best-rated" element={<FilterPage filter="bestgames" />} />
+          <Route path="/best-on-mobile" element={<FilterPage filter="bestonmobile" />} />
           
           {/* Category routes */}
           <Route path="/:categorySlug" element={<CategoryPage />} />
@@ -31,6 +32,7 @@ function App() {
           <Route path="/:categorySlug/most-played" element={<CategoryPage filter="mostplayed" />} />
           <Route path="/:categorySlug/newest" element={<CategoryPage filter="newest" />} />
           <Route path="/:categorySlug/best-rated" element={<CategoryPage filter="bestgames" />} />
+          <Route path="/:categorySlug/best-on-mobile" element={<CategoryPage filter="bestonmobile" />} />
           
           <Route path="*" element={<NotFoundPage />} />
         </Route>
