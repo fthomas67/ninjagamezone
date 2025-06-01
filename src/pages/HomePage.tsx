@@ -73,7 +73,7 @@ const HomePage = () => {
       return `Search Results for "${searchQuery}" - Free Online Games | NinjaGameZone`;
     }
     
-    return "Free Online Games - Play Now! | NinjaGameZone";
+    return "Free Online Games - Play Now!";
   };
 
   const getPageDescription = () => {
