@@ -22,6 +22,15 @@ interface GameData {
 
 const typedBestOnMobileGames = bestOnMobileGamesData as GameData[];
 
+interface HTMLIFrameElement {
+  webkitEnterFullscreen?: () => void;
+  webkitExitFullscreen?: () => void;
+}
+
+interface Window {
+  MSStream?: any;
+}
+
 const GamePage = () => {
   const { gameId, gameSlug } = useParams<{ gameId: string; gameSlug: string }>();
   const navigate = useNavigate();
@@ -164,6 +173,24 @@ const GamePage = () => {
   }, [gameId, gameSlug, navigate]);
 
   const toggleFullscreen = () => {
+    // Détecter si l'appareil est iOS
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    
+    if (isIOS) {
+      const iframe = document.querySelector('iframe') as HTMLIFrameElement;
+      if (iframe) {
+        if (!isFullscreen) {
+          // Utiliser l'API spécifique à iOS
+          iframe.webkitEnterFullscreen?.();
+          setIsFullscreen(true);
+        } else {
+          iframe.webkitExitFullscreen?.();
+          setIsFullscreen(false);
+        }
+      }
+      return;
+    }
+
     if (!document.fullscreenElement) {
       const gameContainer = document.getElementById('game-container');
       if (gameContainer) {
@@ -315,7 +342,7 @@ const GamePage = () => {
 
                 return (
                   <div 
-                    className="max-h-[80vh] mx-auto"
+                    className={`max-h-[80vh] ${!isFullscreen ? 'mx-auto' : ''}`}
                     style={{ aspectRatio: ratio }}
                   >
                     <iframe
