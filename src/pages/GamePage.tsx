@@ -6,6 +6,7 @@ import { Maximize2, Share2, Gamepad2, AlertTriangle, X } from 'lucide-react';
 import { createSlug } from '../utils/slug';
 import { Helmet } from 'react-helmet-async';
 import bestOnMobileGamesData from '../data/gamemonetize_bestonmobile.json';
+import GameCard from '../components/GameCard';
 
 interface GameData {
   id: string;
@@ -342,8 +343,11 @@ const GamePage = () => {
 
                 return (
                   <div 
-                    className={`max-h-[80vh] ${!isFullscreen ? 'mx-auto' : ''}`}
-                    style={{ aspectRatio: ratio }}
+                    className={`max-h-[540px] ${!isFullscreen ? 'mx-auto' : ''}`}
+                    style={{ 
+                      aspectRatio: ratio,
+                      height: 'min(540px, 80vh)'
+                    }}
                   >
                     <iframe
                       src={game.url}
@@ -440,35 +444,10 @@ const GamePage = () => {
               <h3 className="text-lg font-bold p-4 border-b border-gray-100">
                 Similar Games
               </h3>
-              <div className="divide-y divide-gray-100">
-                {similarGames.map(similarGame => {
-                  const similarGameSlug = createSlug(similarGame.title);
-                    
-                  return (
-                    <Link
-                      key={similarGame.id}
-                      to={`/game/${similarGame.id}/${similarGameSlug}`}
-                      className="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors"
-                    >
-                      <div className="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden">
-                        <img
-                          src={similarGame.thumbnail}
-                          alt={similarGame.title}
-                          className="w-full h-full object-cover"
-                          loading="lazy"
-                        />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-medium text-sm line-clamp-2">
-                          {similarGame.title}
-                        </h4>
-                        <span className="text-xs text-gray-500">
-                          {similarGame.categoryName}
-                        </span>
-                      </div>
-                    </Link>
-                  );
-                })}
+              <div className="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-1 gap-4 p-4">
+                {similarGames.map(similarGame => (
+                  <GameCard key={similarGame.id} game={similarGame} />
+                ))}
               </div>
             </div>
           </div>

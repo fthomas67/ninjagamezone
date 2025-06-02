@@ -16,7 +16,7 @@ const GameCard = ({ game }: GameCardProps) => {
       className="group transition-all duration-300"
       aria-label={`Play ${game.title}`}
     >
-      <div className="relative overflow-hidden rounded-xl bg-gray-100" style={{ aspectRatio: '512/384' }}>
+      <div className="relative overflow-hidden rounded-xl bg-gray-100 shadow-md hover:shadow-lg transition-shadow duration-300" style={{ aspectRatio: '512/384' }}>
         <img
           src={game.thumbnail}
           alt={game.title}
