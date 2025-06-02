@@ -13,16 +13,17 @@ const GameCard = ({ game }: GameCardProps) => {
   return (
     <Link
       to={gameUrl}
-      className="group hover:scale-[1.02] transition-all duration-300"
+      className="group transition-all duration-300"
       aria-label={`Play ${game.title}`}
     >
-      <div className="relative aspect-video overflow-hidden rounded-xl bg-gray-100">
+      <div className="relative overflow-hidden rounded-xl bg-gray-100" style={{ aspectRatio: '512/384' }}>
         <img
           src={game.thumbnail}
           alt={game.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           loading="lazy"
         />
+        <div className="absolute inset-0 pointer-events-none group-hover:ring-2 group-hover:ring-inset group-hover:ring-primary rounded-xl"></div>
       </div>
       
       <div className="mt-2">

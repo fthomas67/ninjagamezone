@@ -13,6 +13,8 @@ const FilterPage = ({ filter }: FilterPageProps) => {
         return 'Latest Games';
       case 'mostplayed':
         return 'Most Played Games';
+      case 'bestonmobile':
+        return 'Best on Mobile Games';
       case 'bestgames':
         return 'Best Rated Games';
       default:
