@@ -108,7 +108,7 @@ const Sidebar = ({
         <nav 
           ref={navRef}
           className={`
-            h-full overflow-y-auto py-4 px-3
+            h-full overflow-y-auto pt-8 px-3 pb-4
             ${isScrolling ? 'scrollbar-visible' : 'scrollbar-hidden'}
             transition-[scrollbar] duration-300
           `}
