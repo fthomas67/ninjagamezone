@@ -133,7 +133,7 @@ const Header = ({ isSidebarOpen, onSidebarToggle }: HeaderProps) => {
             )}
           </div>
         </div>
-        {/* Bouton 'Joué récemment' desktop */}
+        {/* Bouton 'Played recently' desktop */}
         <div className="hidden lg:flex items-center ml-auto relative">
           <div className="relative">
             <button
@@ -142,7 +142,7 @@ const Header = ({ isSidebarOpen, onSidebarToggle }: HeaderProps) => {
               aria-label="Jeux joués récemment"
             >
               <History className="w-5 h-5" />
-              <span className="font-medium">Joué récemment</span>
+              <span className="font-medium">Played recently</span>
             </button>
             {showRecent && (
               <div className="absolute right-1 mt-2 w-96 max-w-[95vw] bg-[#232334] text-white rounded-xl shadow-lg z-50 border border-gray-700 animate-fade-in overflow-x-hidden" style={{minWidth: '260px', maxWidth: '95vw'}}>
