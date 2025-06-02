@@ -98,30 +98,17 @@ const Sidebar = ({
       )}
 
       <aside className={`
-        fixed lg:sticky top-0 left-0 z-40 lg:z-0
+        fixed top-[65px] left-0 z-40
         w-60 xl:w-64 bg-white border-r border-gray-200 
-        h-screen lg:h-screen
+        h-[calc(100vh-65px)]
         flex flex-col
         transition-transform duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
-        {/* Logo section */}
-        <div className="p-4 border-b border-gray-200">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <img src="/logo.svg" alt="NinjaGameZone" className="w-4 h-4" />
-            </div>
-            <span className="font-bold text-xl">
-              <span className="text-foreground">Ninja</span>
-              <span className="text-primary">GameZone</span>
-            </span>
-          </Link>
-        </div>
-
         <nav 
           ref={navRef}
           className={`
-            flex-1 overflow-y-auto py-4 px-3
+            h-full overflow-y-auto py-4 px-3
             ${isScrolling ? 'scrollbar-visible' : 'scrollbar-hidden'}
             transition-[scrollbar] duration-300
           `}
