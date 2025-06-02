@@ -1,0 +1,21 @@
+.ios-fullscreen {
+  position: fixed !important;
+  top: 64px !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: calc(100vh - 64px) !important;
+  z-index: 9999 !important;
+  background: #000 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.ios-fullscreen iframe {
+  position: absolute !important;
+  top: 64px !important; /* hauteur du header */
+  left: 0 !important;
+  width: 100vw !important;
+  height: calc(100vh - 64px) !important;
+  min-height: 0 !important;
+  min-width: 100vw !important;
+  border: none !important;
+} 

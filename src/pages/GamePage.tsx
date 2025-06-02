@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { fetchGameBySlug, getMockGames } from '../services/gameService';
 import { Game } from '../types';
@@ -7,6 +7,7 @@ import { createSlug } from '../utils/slug';
 import { Helmet } from 'react-helmet-async';
 import bestOnMobileGamesData from '../data/gamemonetize_bestonmobile.json';
 import GameCard from '../components/GameCard';
+import '../styles/ios-fullscreen.css';
 
 interface GameData {
   id: string;
@@ -44,6 +45,7 @@ const GamePage = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [isMobileOptimized, setIsMobileOptimized] = useState(false);
   const [showMobileWarning, setShowMobileWarning] = useState(true);
+  const iframeParentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -174,30 +176,14 @@ const GamePage = () => {
   }, [gameId, gameSlug, navigate]);
 
   const toggleFullscreen = () => {
-    // Détecter si l'appareil est iOS
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    
-    if (isIOS) {
-      const iframe = document.querySelector('iframe') as HTMLIFrameElement;
-      if (iframe) {
-        if (!isFullscreen) {
-          // Utiliser l'API spécifique à iOS
-          iframe.webkitEnterFullscreen?.();
-          setIsFullscreen(true);
-        } else {
-          iframe.webkitExitFullscreen?.();
-          setIsFullscreen(false);
-        }
-      }
-      return;
-    }
+    const gameContainer = document.getElementById('game-container');
+    const iframeParent = iframeParentRef.current;
+    if (!gameContainer || !iframeParent) return;
 
+    // Fullscreen natif pour les autres appareils
     if (!document.fullscreenElement) {
-      const gameContainer = document.getElementById('game-container');
-      if (gameContainer) {
-        gameContainer.requestFullscreen();
-        setIsFullscreen(true);
-      }
+      gameContainer.requestFullscreen();
+      setIsFullscreen(true);
     } else {
       document.exitFullscreen();
       setIsFullscreen(false);
@@ -219,6 +205,9 @@ const GamePage = () => {
   useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
+      if (!document.fullscreenElement) {
+        setIsFullscreen(false);
+      }
     };
 
     document.addEventListener('fullscreenchange', handleFullscreenChange);
@@ -336,7 +325,7 @@ const GamePage = () => {
                 ${isFullscreen ? 'fixed inset-0 z-50' : ''}
               `}
             >
-              {isMobile && !isMobileOptimized && showMobileWarning && (
+              {isMobile && !isMobileOptimized && showMobileWarning && !isFullscreen && (
                 <div className="absolute top-0 left-0 right-0 bg-primary/90 text-white p-3 z-10 flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     <AlertTriangle className="w-5 h-5" />
@@ -354,22 +343,40 @@ const GamePage = () => {
                 </div>
               )}
 
+              {/* Affichage du bouton de fermeture en fullscreen iOS */}
+              {isFullscreen && /iPad|iPhone|iPod/.test(navigator.userAgent) && (
+                <div className="fixed top-0 left-0 w-full z-[10000] bg-black/90 flex items-center justify-between px-4 py-3 shadow-md">
+                  <span className="text-white font-semibold text-base">Fullscreen</span>
+                  <button
+                    onClick={toggleFullscreen}
+                    className="flex items-center gap-2 text-white bg-primary/80 hover:bg-primary px-4 py-2 rounded-full font-medium transition-colors"
+                    aria-label="Quit fullscreen"
+                  >
+                    <X className="w-5 h-5" />
+                    <span>Quit fullscreen</span>
+                  </button>
+                </div>
+              )}
+
               {(() => {
                 const ratio = game?.width && game?.height 
                   ? `${parseInt(game.width)}/${parseInt(game.height)}`
                   : '16/9';
 
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
                 return (
                   <div 
-                    className={`max-h-[540px] ${!isFullscreen ? 'mx-auto' : ''}`}
+                    ref={iframeParentRef}
+                    className={`${!isFullscreen ? 'mx-auto max-h-[540px]' : ''}`}
                     style={{ 
-                      aspectRatio: ratio
+                      aspectRatio: isFullscreen ? 'auto' : ratio
                     }}
                   >
                     <iframe
                       src={game.url}
                       title={game.title}
-                      className="w-full h-full"
+                      className={`w-full h-full ${isFullscreen && isIOS ? 'ios-fullscreen' : ''}`}
                       style={{
                         width: isFullscreen ? '100vw' : '100%',
                         height: isFullscreen ? '100vh' : '100%',
