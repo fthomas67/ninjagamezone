@@ -3,6 +3,8 @@ import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { categories, popularityFilters, getFilterBySlug, getFilterSlug } from '../data/categories';
 import { PopularityFilter as PopularityFilterType } from '../types';
 import { createSlug } from '../utils/slug';
+import { History, X } from 'lucide-react';
+import GameCard from './GameCard';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -18,6 +20,8 @@ const Sidebar = ({
   const navRef = useRef<HTMLElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const [showRecent, setShowRecent] = useState(false);
+  const [recentGames, setRecentGames] = useState<any[]>([]);
   
   const getCurrentState = () => {
     const pathParts = location.pathname.split('/').filter(Boolean);
@@ -87,6 +91,17 @@ const Sidebar = ({
     };
   }, []);
 
+  useEffect(() => {
+    if (showRecent) {
+      try {
+        const stored = localStorage.getItem('recentGames');
+        setRecentGames(stored ? JSON.parse(stored) : []);
+      } catch {
+        setRecentGames([]);
+      }
+    }
+  }, [showRecent]);
+
   return (
     <>
       {/* Mobile overlay */}
@@ -147,6 +162,46 @@ const Sidebar = ({
             ))}
           </ul>
         </nav>
+        {/* Encart jeux récents mobile (fixe en bas) */}
+        {isOpen && (
+          <div className="lg:hidden fixed left-0 bottom-0 w-60 xl:w-64 bg-[#232334] text-white border-t border-gray-700 z-50">
+            <button
+              onClick={() => setShowRecent(v => !v)}
+              className="flex items-center gap-2 w-full px-4 py-3 hover:bg-white/10 transition-colors font-medium"
+              aria-label="Jeux joués récemment"
+            >
+              <History className="w-5 h-5" />
+              <span>Played recently</span>
+            </button>
+            {showRecent && (
+              <div className="fixed inset-0 w-screen h-screen bg-[#232334] text-white z-50 flex flex-col animate-fade-in overflow-y-auto">
+                <div className="flex items-center justify-between p-4 border-b border-white/10">
+                  <span className="font-bold text-lg">Played recently</span>
+                  <button onClick={() => setShowRecent(false)} className="hover:bg-white/10 rounded-full p-1"><X className="w-6 h-6" /></button>
+                </div>
+                <div className="p-4 grid grid-cols-2 md:grid-cols-3 gap-4 overflow-y-auto">
+                  {recentGames.length === 0 && <span className="text-gray-400 col-span-2">Aucun jeu récent</span>}
+                  {recentGames.map((game, idx) => (
+                    <div key={game.id} className="relative group">
+                      <GameCard game={game} />
+                      <button
+                        className="absolute top-2 right-2 bg-pink-600 hover:bg-pink-700 text-white rounded-full p-1 opacity-80 group-hover:opacity-100 transition"
+                        onClick={() => {
+                          const updated = recentGames.filter((g) => g.id !== game.id);
+                          setRecentGames(updated);
+                          localStorage.setItem('recentGames', JSON.stringify(updated));
+                        }}
+                        aria-label="Supprimer ce jeu"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </aside>
     </>
   );

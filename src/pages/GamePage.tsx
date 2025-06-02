@@ -245,6 +245,30 @@ const GamePage = () => {
     window.addEventListener('message', handleIframeResize);
     return () => window.removeEventListener('message', handleIframeResize);
   }, []);
+
+  useEffect(() => {
+    if (game) {
+      // Gestion des jeux récents dans le localStorage
+      try {
+        const stored = localStorage.getItem('recentGames');
+        let recentGames = stored ? JSON.parse(stored) : [];
+        // Retirer le jeu s'il existe déjà
+        recentGames = recentGames.filter((g: any) => g.id !== game.id);
+        // Ajouter le jeu courant en premier
+        recentGames.unshift({
+          id: game.id,
+          title: game.title,
+          thumbnail: game.thumbnail,
+          url: game.url
+        });
+        // Limiter à 6 jeux
+        if (recentGames.length > 6) recentGames = recentGames.slice(0, 6);
+        localStorage.setItem('recentGames', JSON.stringify(recentGames));
+      } catch (e) {
+        // fail silently
+      }
+    }
+  }, [game]);
   
   if (loading) {
     return (
@@ -334,19 +358,12 @@ const GamePage = () => {
                 const ratio = game?.width && game?.height 
                   ? `${parseInt(game.width)}/${parseInt(game.height)}`
                   : '16/9';
-                
-                console.log('Current game dimensions:', {
-                  width: game?.width,
-                  height: game?.height,
-                  ratio
-                });
 
                 return (
                   <div 
                     className={`max-h-[540px] ${!isFullscreen ? 'mx-auto' : ''}`}
                     style={{ 
-                      aspectRatio: ratio,
-                      height: 'min(540px, 80vh)'
+                      aspectRatio: ratio
                     }}
                   >
                     <iframe

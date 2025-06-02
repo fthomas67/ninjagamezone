@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Search, Menu, X } from 'lucide-react';
+import { Search, Menu, X, History } from 'lucide-react';
 import bestOnMobile from '../data/gamemonetize_bestonmobile.json';
 import mostPlayed from '../data/gamemonetize_mostplayed.json';
 import bestGames from '../data/gamemonetize_bestgames.json';
 import newest from '../data/gamemonetize_newest.json';
 import { createSlug } from '../utils/slug';
+import GameCard from './GameCard';
 
 interface Game {
   id: string;
@@ -24,6 +25,8 @@ const Header = ({ isSidebarOpen, onSidebarToggle }: HeaderProps) => {
   const [suggestions, setSuggestions] = useState<Game[]>([]);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [showRecent, setShowRecent] = useState(false);
+  const [recentGames, setRecentGames] = useState<any[]>([]);
   const navigate = useNavigate();
 
   // Combiner tous les jeux en un seul tableau
@@ -56,6 +59,17 @@ const Header = ({ isSidebarOpen, onSidebarToggle }: HeaderProps) => {
       setSuggestions([]);
     }
   }, [searchTerm]);
+
+  useEffect(() => {
+    if (showRecent) {
+      try {
+        const stored = localStorage.getItem('recentGames');
+        setRecentGames(stored ? JSON.parse(stored) : []);
+      } catch {
+        setRecentGames([]);
+      }
+    }
+  }, [showRecent]);
 
   const handleGameSelect = (game: Game) => {
     const titleSlug = createSlug(game.title);
@@ -112,6 +126,46 @@ const Header = ({ isSidebarOpen, onSidebarToggle }: HeaderProps) => {
                         className="w-10 h-10 rounded object-cover"
                       />
                       <span className="truncate">{game.title}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+        {/* Bouton 'Joué récemment' desktop */}
+        <div className="hidden lg:flex items-center ml-auto relative">
+          <div className="relative">
+            <button
+              onClick={() => setShowRecent(v => !v)}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-700"
+              aria-label="Jeux joués récemment"
+            >
+              <History className="w-5 h-5" />
+              <span className="font-medium">Joué récemment</span>
+            </button>
+            {showRecent && (
+              <div className="absolute right-1 mt-2 w-96 max-w-[95vw] bg-[#232334] text-white rounded-xl shadow-lg z-50 border border-gray-700 animate-fade-in overflow-x-hidden" style={{minWidth: '260px', maxWidth: '95vw'}}>
+                <div className="flex items-center justify-between p-4 border-b border-white/10">
+                  <span className="font-bold text-lg">Joués récemment</span>
+                  <button onClick={() => setShowRecent(false)} className="hover:bg-white/10 rounded-full p-1"><X className="w-6 h-6" /></button>
+                </div>
+                <div className="p-4 grid grid-cols-2 gap-4">
+                  {recentGames.length === 0 && <span className="text-gray-400 col-span-2">Aucun jeu récent</span>}
+                  {recentGames.map((game, idx) => (
+                    <div key={game.id} className="relative group">
+                      <GameCard game={game} />
+                      <button
+                        className="absolute top-2 right-2 bg-pink-600 hover:bg-pink-700 text-white rounded-full p-1 opacity-80 group-hover:opacity-100 transition"
+                        onClick={() => {
+                          const updated = recentGames.filter((g) => g.id !== game.id);
+                          setRecentGames(updated);
+                          localStorage.setItem('recentGames', JSON.stringify(updated));
+                        }}
+                        aria-label="Supprimer ce jeu"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
                     </div>
                   ))}
                 </div>
