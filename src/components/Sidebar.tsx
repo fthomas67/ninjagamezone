@@ -168,7 +168,7 @@ const Sidebar = ({
             <button
               onClick={() => setShowRecent(v => !v)}
               className="flex items-center gap-2 w-full px-4 py-3 hover:bg-white/10 transition-colors font-medium"
-              aria-label="Jeux joués récemment"
+              aria-label="Games played recently"
             >
               <History className="w-5 h-5" />
               <span>Played recently</span>

@@ -139,7 +139,7 @@ const Header = ({ isSidebarOpen, onSidebarToggle }: HeaderProps) => {
             <button
               onClick={() => setShowRecent(v => !v)}
               className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-700"
-              aria-label="Jeux joués récemment"
+              aria-label="Games played recently"
             >
               <History className="w-5 h-5" />
               <span className="font-medium">Played recently</span>
@@ -147,7 +147,7 @@ const Header = ({ isSidebarOpen, onSidebarToggle }: HeaderProps) => {
             {showRecent && (
               <div className="absolute right-1 mt-2 w-96 max-w-[95vw] bg-[#232334] text-white rounded-xl shadow-lg z-50 border border-gray-700 animate-fade-in overflow-x-hidden" style={{minWidth: '260px', maxWidth: '95vw'}}>
                 <div className="flex items-center justify-between p-4 border-b border-white/10">
-                  <span className="font-bold text-lg">Joués récemment</span>
+                  <span className="font-bold text-lg">Played recently</span>
                   <button onClick={() => setShowRecent(false)} className="hover:bg-white/10 rounded-full p-1"><X className="w-6 h-6" /></button>
                 </div>
                 <div className="p-4 grid grid-cols-2 gap-4">
