@@ -216,7 +216,7 @@ export const fetchGameBySlug = async (slug: string): Promise<Game | null> => {
       })
       .filter(g => g.score > 0) // Ne garder que les jeux avec au moins un tag en commun
       .sort((a, b) => b.score - a.score) // Trier par score décroissant
-      .slice(0, 5) // Prendre les 5 meilleurs
+      .slice(0, 6) // Prendre les 5 meilleurs
       .map(g => transformGameData(g.game));
 
     const transformedGame = transformGameData(game);

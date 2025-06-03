@@ -77,9 +77,9 @@ const GameGrid = ({ categoryId = 0, popularity = 'mostplayed', searchTerm = '' }
   if (error) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center text-center p-4">
-        <Gamepad2 className="w-16 h-16 text-gray-400 mb-4" />
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">Oops!</h2>
-        <p className="text-gray-600 mb-6">{error}</p>
+        <Gamepad2 className="w-16 h-16 text-gray-600 mb-4" />
+        <h2 className="text-2xl font-bold text-gray-300 mb-2">Oops!</h2>
+        <p className="text-gray-400 mb-6">{error}</p>
       </div>
     );
   }
@@ -98,9 +98,9 @@ const GameGrid = ({ categoryId = 0, popularity = 'mostplayed', searchTerm = '' }
 
       {!loading && games.length === 0 && (
         <div className="col-span-full text-center py-16">
-          <Gamepad2 className="mx-auto h-16 w-16 text-gray-400 mb-4" />
-          <h3 className="text-lg font-medium text-gray-900">No games found</h3>
-          <p className="mt-1 text-gray-500">
+          <Gamepad2 className="mx-auto h-16 w-16 text-gray-600 mb-4" />
+          <h3 className="text-lg font-medium text-gray-300">No games found</h3>
+          <p className="mt-1 text-gray-400">
             Try adjusting your filters or search.
           </p>
         </div>

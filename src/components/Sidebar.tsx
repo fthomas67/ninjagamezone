@@ -22,6 +22,7 @@ const Sidebar = ({
   const location = useLocation();
   const [showRecent, setShowRecent] = useState(false);
   const [recentGames, setRecentGames] = useState<any[]>([]);
+  const [isSidebarHovered, setIsSidebarHovered] = useState(false);
   
   const getCurrentState = () => {
     const pathParts = location.pathname.split('/').filter(Boolean);
@@ -112,97 +113,113 @@ const Sidebar = ({
         />
       )}
 
-      <aside className={`
-        fixed top-[65px] left-0 z-40
-        w-60 xl:w-64 bg-white border-r border-gray-200 
-        h-[calc(100vh-65px)]
-        flex flex-col
-        transition-transform duration-300 ease-in-out
-        ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-      `}>
-        <nav 
-          ref={navRef}
+      {/* Wrapper pour permettre overflow visible */}
+      <div style={{ overflow: 'visible', position: 'relative', height: '100%' }}>
+        <aside
           className={`
-            h-full overflow-y-auto pt-8 px-3 pb-4
-            ${isScrolling ? 'scrollbar-visible' : 'scrollbar-hidden'}
-            transition-[scrollbar] duration-300
+            fixed top-[65px] left-0 z-40
+            w-16
+            h-[calc(100vh-65px)]
+            flex flex-col
+            shadow-[1px_0_2px_rgba(0,0,0,0.05)]
+            bg-sidebar
+            transition-all duration-300 ease-in-out
+            ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
           `}
         >
-          <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-            Sort by
-          </h3>
-          <ul className="space-y-1 mb-6">
-            {popularityFilters.map((filter) => (
-              <li key={filter.type}>
-                <button 
-                  onClick={() => handlePopularityClick(filter.type)}
-                  className={`nav-item w-full text-left ${currentFilter === filter.type ? 'active' : ''}`}
-                >
-                  <span>{filter.icon}</span>
-                  <span>{filter.label}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
+          <nav 
+            ref={navRef}
+            className={`
+              h-full overflow-y-auto pt-8 px-2 pb-4
+              ${isScrolling ? 'scrollbar-visible' : 'scrollbar-hidden'}
+              transition-[scrollbar] duration-300
+              overflow-visible
+            `}
+          >
+            <h3 className="sr-only">Trier par</h3>
+            <ul className="space-y-1 mb-6">
+              {popularityFilters.map((filter) => (
+                <li key={filter.type} className="relative group">
+                  <button 
+                    onClick={() => handlePopularityClick(filter.type)}
+                    className={`nav-item w-full text-left text-muted hover:bg-hover flex items-center justify-center rounded-lg px-2 py-2 transition-all duration-200
+                      ${currentFilter === filter.type ? 'bg-hover text-foreground font-bold' : ''}
+                    `}
+                    aria-label={filter.label}
+                  >
+                    <span className="text-xl w-8 flex justify-center items-center">{filter.icon}</span>
+                  </button>
+                  {/* Tooltip */}
+                  <span className="pointer-events-none absolute left-full top-1/2 -translate-y-1/2 ml-2 px-3 py-2 rounded-lg bg-border text-foreground text-sm font-semibold shadow-lg opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 whitespace-nowrap z-50">
+                    {filter.label}
+                  </span>
+                </li>
+              ))}
+            </ul>
 
-          <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-            Categories
-          </h3>
-          <ul className="space-y-1">
-            {categories.map((category) => (
-              <li key={category.id}>
-                <button
-                  onClick={() => handleCategoryClick(category.id)}
-                  className={`nav-item w-full text-left ${currentCategory === category.id ? 'active' : ''}`}
-                >
-                  <span>{category.emoji}</span>
-                  <span>{category.name}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
-        {/* Encart jeux récents mobile (fixe en bas) */}
-        {isOpen && (
-          <div className="lg:hidden fixed left-0 bottom-0 w-60 xl:w-64 bg-[#232334] text-white border-t border-gray-700 z-50">
-            <button
-              onClick={() => setShowRecent(v => !v)}
-              className="flex items-center gap-2 w-full px-4 py-3 hover:bg-white/10 transition-colors font-medium"
-              aria-label="Games played recently"
-            >
-              <History className="w-5 h-5" />
-              <span>Played recently</span>
-            </button>
-            {showRecent && (
-              <div className="fixed inset-0 w-screen h-screen bg-[#232334] text-white z-50 flex flex-col animate-fade-in overflow-y-auto">
-                <div className="flex items-center justify-between p-4 border-b border-white/10">
-                  <span className="font-bold text-lg">Played recently</span>
-                  <button onClick={() => setShowRecent(false)} className="hover:bg-white/10 rounded-full p-1"><X className="w-6 h-6" /></button>
-                </div>
-                <div className="p-4 grid grid-cols-2 md:grid-cols-3 gap-4 overflow-y-auto">
-                  {recentGames.length === 0 && <span className="text-gray-400 col-span-2">Aucun jeu récent</span>}
-                  {recentGames.map((game, idx) => (
-                    <div key={game.id} className="relative group">
-                      <GameCard game={game} />
-                      <button
-                        className="absolute top-2 right-2 bg-pink-600 hover:bg-pink-700 text-white rounded-full p-1 opacity-80 group-hover:opacity-100 transition"
-                        onClick={() => {
-                          const updated = recentGames.filter((g) => g.id !== game.id);
-                          setRecentGames(updated);
-                          localStorage.setItem('recentGames', JSON.stringify(updated));
-                        }}
-                        aria-label="Supprimer ce jeu"
-                      >
-                        <X className="w-5 h-5" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
+            <h3 className="sr-only">Catégories</h3>
+            <ul className="space-y-1">
+              {categories.map((category) => (
+                <li key={category.id} className="relative group">
+                  <button
+                    onClick={() => handleCategoryClick(category.id)}
+                    className={`nav-item w-full text-left text-muted hover:bg-hover flex items-center justify-center rounded-lg px-2 py-2 transition-all duration-200
+                      ${currentCategory === category.id ? 'bg-hover text-foreground font-bold' : ''}
+                    `}
+                    aria-label={category.name}
+                  >
+                    <span className="text-xl w-8 flex justify-center items-center">{category.emoji}</span>
+                  </button>
+                  {/* Tooltip */}
+                  <span className="pointer-events-none absolute left-full top-1/2 -translate-y-1/2 ml-2 px-3 py-2 rounded-lg bg-border text-foreground text-sm font-semibold shadow-lg opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 whitespace-nowrap z-50">
+                    {category.name}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </aside>
+      </div>
+      {/* Encart jeux récents mobile (fixe en bas) */}
+      {isOpen && (
+        <div className="lg:hidden fixed left-0 bottom-0 w-60 xl:w-64 bg-sidebar text-foreground border-t border-border z-50">
+          <button
+            onClick={() => setShowRecent(v => !v)}
+            className="flex items-center gap-2 w-full px-4 py-3 hover:bg-primary/10 transition-colors font-medium"
+            aria-label="Games played recently"
+          >
+            <History className="w-5 h-5" />
+            <span>Played recently</span>
+          </button>
+          {showRecent && (
+            <div className="fixed inset-0 w-screen h-screen bg-sidebar text-foreground z-50 flex flex-col animate-fade-in overflow-y-auto">
+              <div className="flex items-center justify-between p-4 border-b border-border/10">
+                <span className="font-bold text-lg">Played recently</span>
+                <button onClick={() => setShowRecent(false)} className="hover:bg-primary/20 rounded-full p-1"><X className="w-6 h-6" /></button>
               </div>
-            )}
-          </div>
-        )}
-      </aside>
+              <div className="p-4 grid grid-cols-2 md:grid-cols-3 gap-4 overflow-y-auto">
+                {recentGames.length === 0 && <span className="text-muted col-span-2">Aucun jeu récent</span>}
+                {recentGames.map((game, idx) => (
+                  <div key={game.id} className="relative group">
+                    <GameCard game={game} />
+                    <button
+                      className="absolute top-2 right-2 bg-pink-600 hover:bg-pink-700 text-white rounded-full p-1 opacity-80 group-hover:opacity-100 transition"
+                      onClick={() => {
+                        const updated = recentGames.filter((g) => g.id !== game.id);
+                        setRecentGames(updated);
+                        localStorage.setItem('recentGames', JSON.stringify(updated));
+                      }}
+                      aria-label="Supprimer ce jeu"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </>
   );
 };

@@ -18,7 +18,7 @@ const CategoryPage = ({ filter = 'newest' }: CategoryPageProps) => {
   if (!category) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center text-center p-4">
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">Category not found</h2>
+        <h2 className="text-2xl font-bold text-white mb-2">Category not found</h2>
         <p className="text-gray-600 mb-6">
           The category you're looking for doesn't exist.
         </p>
@@ -118,7 +118,7 @@ const CategoryPage = ({ filter = 'newest' }: CategoryPageProps) => {
 
       <div className="fade-in max-w-full overflow-x-hidden">
         <div className="mb-6">
-          <h1 className="text-2xl md:text-3xl font-bold mb-2">
+          <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">
             {getFilterTitle()}
           </h1>
           

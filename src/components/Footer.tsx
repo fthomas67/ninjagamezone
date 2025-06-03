@@ -3,7 +3,7 @@ import { Heart } from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-100 border-t border-gray-200">
+    <footer className="bg-background border-t border-border">
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row justify-between items-center mb-8">
           <div className="flex items-center gap-2 mb-4 md:mb-0">
@@ -17,18 +17,18 @@ const Footer = () => {
           </div>
           
           <div className="flex gap-6">
-            <Link to="/legal-notice" className="text-gray-600 hover:text-primary">Legal Notice</Link>
+            <Link to="/legal-notice" className="text-muted hover:text-primary">Legal Notice</Link>
           </div>
         </div>
         
-        <div className="border-t border-gray-200 pt-6 text-center">
-          <p className="text-gray-500 text-sm">
+        <div className="border-t border-border pt-6 text-center">
+          <p className="text-muted text-sm">
             Games are provided by GameMonetize via their RSS feed. NinjaGameZone is not affiliated with GameMonetize.
           </p>
           
-          <p className="text-gray-500 text-sm mt-2 flex items-center justify-center gap-1">
+          <p className="text-muted text-sm mt-2 flex items-center justify-center gap-1">
             <span>Created with</span> 
-            <Heart className="w-4 h-4 text-secondary inline" /> 
+            <Heart className="w-4 h-4 text-primary inline" /> 
             <span>in 2025</span>
           </p>
         </div>

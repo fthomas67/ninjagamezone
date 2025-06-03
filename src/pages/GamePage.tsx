@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { fetchGameBySlug, getMockGames } from '../services/gameService';
 import { Game } from '../types';
-import { Maximize2, Share2, Gamepad2, AlertTriangle, X } from 'lucide-react';
+import { Maximize2, Share2, Gamepad2, AlertTriangle, X, PlayCircle } from 'lucide-react';
 import { createSlug } from '../utils/slug';
 import { Helmet } from 'react-helmet-async';
 import bestOnMobileGamesData from '../data/gamemonetize_bestonmobile.json';
@@ -24,15 +24,6 @@ interface GameData {
 
 const typedBestOnMobileGames = bestOnMobileGamesData as GameData[];
 
-interface HTMLIFrameElement {
-  webkitEnterFullscreen?: () => void;
-  webkitExitFullscreen?: () => void;
-}
-
-interface Window {
-  MSStream?: any;
-}
-
 const GamePage = () => {
   const { gameId, gameSlug } = useParams<{ gameId: string; gameSlug: string }>();
   const navigate = useNavigate();
@@ -46,6 +37,7 @@ const GamePage = () => {
   const [isMobileOptimized, setIsMobileOptimized] = useState(false);
   const [showMobileWarning, setShowMobileWarning] = useState(true);
   const iframeParentRef = useRef<HTMLDivElement>(null);
+  const [showPreGame, setShowPreGame] = useState(true);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -264,7 +256,7 @@ const GamePage = () => {
       <div className="min-h-[60vh] flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-primary border-r-transparent mb-4"></div>
-          <p className="text-gray-600">Loading game...</p>
+          <p className="text-muted">Loading game...</p>
         </div>
       </div>
     );
@@ -273,9 +265,9 @@ const GamePage = () => {
   if (error || !game) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center text-center p-4">
-        <Gamepad2 className="w-16 h-16 text-gray-400 mb-4" />
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">Oops, game not found!</h2>
-        <p className="text-gray-600 mb-6">
+        <Gamepad2 className="w-16 h-16 text-muted mb-4" />
+        <h2 className="text-2xl font-bold text-foreground mb-2">Oops, game not found!</h2>
+        <p className="text-muted mb-6">
           {error || "We couldn't find the game you're looking for."}
         </p>
         <Link to="/" className="btn btn-primary">
@@ -313,20 +305,36 @@ const GamePage = () => {
         )}
       </Helmet>
 
-      <div className="fade-in -mt-6 -mx-4 md:-mx-6 lg:-mx-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 p-4 md:p-6 lg:p-8">
+      <div
+        className="fade-in -mx-4 md:-mx-6 lg:-mx-8"
+        style={{
+          backgroundImage: `
+            linear-gradient(to bottom, rgb(25, 28, 38) 0%, rgba(25, 28, 38, 0) 20%),
+            linear-gradient(to top, rgb(25, 28, 38) 0%, rgba(25, 28, 38, 0) 20%),
+            radial-gradient(circle at 50% 50%, rgb(25, 28, 38) 0%, rgba(25, 28, 38, 0.6) 0%,  rgb(25, 28, 38, 1) 75%),
+            linear-gradient(0deg, rgb(0, 0, 0) 10%, rgba(0, 0, 0, 0.1) 100%),
+            url(${game.thumbnail})
+          `,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 p-4 md:p-6 lg:p-8 relative z-10">
+          
           {/* Main content - Game and Description */}
-          <main className="lg:col-span-3">
+          <main className="col-span-1 lg:col-span-4">
             {/* Game container */}
             <article 
               id="game-container" 
               className={`
-                relative bg-black rounded-xl overflow-hidden
+                relative rounded-xl overflow-hidden
                 ${isFullscreen ? 'fixed inset-0 z-50' : ''}
+                ${!showPreGame ? 'bg-black' : ''}
               `}
             >
               {isMobile && !isMobileOptimized && showMobileWarning && !isFullscreen && (
-                <div className="absolute top-0 left-0 right-0 bg-primary/90 text-white p-3 z-10 flex items-center justify-between gap-2">
+                <div className="absolute top-0 left-0 right-0 bg-primary/90 text-button-brand p-3 z-10 flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     <AlertTriangle className="w-5 h-5" />
                     <p className="text-sm">
@@ -345,11 +353,11 @@ const GamePage = () => {
 
               {/* Affichage du bouton de fermeture en fullscreen iOS */}
               {isFullscreen && /iPad|iPhone|iPod/.test(navigator.userAgent) && (
-                <div className="fixed top-0 left-0 w-full z-[10000] bg-black/90 flex items-center justify-between px-4 py-3 shadow-md">
-                  <span className="text-white font-semibold text-base">Fullscreen</span>
+                <div className="fixed top-0 left-0 w-full z-[10000] bg-background/90 flex items-center justify-between px-4 py-3 shadow-md">
+                  <span className="text-foreground font-semibold text-base">Fullscreen</span>
                   <button
                     onClick={toggleFullscreen}
-                    className="flex items-center gap-2 text-white bg-primary/80 hover:bg-primary px-4 py-2 rounded-full font-medium transition-colors"
+                    className="flex items-center gap-2 text-foreground bg-primary/80 hover:bg-primary px-4 py-2 rounded-full font-medium transition-colors"
                     aria-label="Quit fullscreen"
                   >
                     <X className="w-5 h-5" />
@@ -358,89 +366,117 @@ const GamePage = () => {
                 </div>
               )}
 
-              {(() => {
-                const ratio = game?.width && game?.height 
-                  ? `${parseInt(game.width)}/${parseInt(game.height)}`
-                  : '16/9';
-
-                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-
-                return (
-                  <div 
-                    ref={iframeParentRef}
-                    className={`${!isFullscreen ? 'mx-auto max-h-[540px]' : ''}`}
-                    style={{ 
-                      aspectRatio: isFullscreen ? 'auto' : ratio
-                    }}
-                  >
-                    <iframe
-                      src={game.url}
-                      title={game.title}
-                      className={`w-full h-full ${isFullscreen && isIOS ? 'ios-fullscreen' : ''}`}
-                      style={{
-                        width: isFullscreen ? '100vw' : '100%',
-                        height: isFullscreen ? '100vh' : '100%',
-                        border: 'none',
-                        objectFit: 'contain'
-                      }}
-                      allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; interest-cohort"
-                      loading="lazy"
-                      scrolling="no"
-                      sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-presentation allow-popups-to-escape-sandbox"
-                      referrerPolicy="origin"
-                    ></iframe>
+              {showPreGame && game ? (
+                <div className="flex flex-row items-center justify-center w-full h-full min-h-[320px] min-w-[220px] py-12">
+                  {/* Centre : thumb, titre, boutons */}
+                  <div className="flex flex-col items-center justify-center flex-1 px-8">
+                    <img
+                      src={game.thumbnail}
+                      alt={game.title}
+                      className="w-56 h-36 md:w-64 md:h-40 rounded-xl shadow-2xl object-cover mb-8"
+                      style={{ boxShadow: '0 8px 32px 0 rgba(0,0,0,0.25)' }}
+                    />
+                    <h1 className="text-3xl md:text-4xl font-bold text-white mb-8 text-center drop-shadow-lg">{game.title}</h1>
+                    <div className="flex flex-col gap-4 w-full items-center">
+                      <button
+                        className="text-button-brand text-xl font-bold px-10 py-4 rounded-full shadow-lg flex items-center gap-3 transition-all duration-300 mb-2 bg-gradient-yellow shadow-yellow-glow hover:bg-gradient-yellow-hover hover:shadow-yellow-glow-hover hover:scale-hover active:scale-95"
+                        onClick={() => setShowPreGame(false)}
+                      >
+                        Play Now
+                        <PlayCircle className="w-7 h-7" />
+                      </button>
+                    </div>
                   </div>
-                );
-              })()}
+                </div>
+              ) : (
+                <div 
+                  ref={iframeParentRef}
+                  className={`${!isFullscreen ? 'mx-auto h-[540px]' : ''}`}
+                  style={{ 
+                    aspectRatio: isFullscreen ? 'auto' : ''
+                  }}
+                >
+                  <iframe
+                    src={game.url}
+                    title={game.title}
+                    className={`w-full h-full ${isFullscreen && /iPad|iPhone|iPod/.test(navigator.userAgent) ? 'ios-fullscreen' : ''}`}
+                    style={{
+                      width: isFullscreen ? '100vw' : '100%',
+                      height: isFullscreen ? '100vh' : '100%',
+                      border: 'none',
+                      objectFit: 'contain'
+                    }}
+                    allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; interest-cohort"
+                    loading="lazy"
+                    scrolling="no"
+                    sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-presentation allow-popups-to-escape-sandbox"
+                    referrerPolicy="origin"
+                  ></iframe>
+                </div>
+              )}
               
               {/* Game controls bar */}
-              <div className={`bg-black/90 backdrop-blur-sm p-2 flex items-center justify-between ${isFullscreen ? 'hidden' : ''}`}>
+              {!showPreGame && (
+              <div className={`bg-background/90 backdrop-blur-sm p-2 flex items-center justify-between ${isFullscreen ? 'hidden' : ''}`}>
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                     <img src="/logo.svg" alt="NinjaGameZone Logo" className="w-4 h-4" />
                   </div>
-                  <h1 className="text-white font-medium line-clamp-1">{game.title}</h1>
+                  <h1 className="text-foreground font-medium line-clamp-1">{game.title}</h1>
                 </div>
                 
                 <div className="flex items-center gap-2">
                   <button
                     onClick={handleShare}
-                    className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors relative group"
+                    className="p-2 text-muted hover:text-foreground hover:bg-hover rounded-lg transition-colors relative group"
                     aria-label="Share"
                   >
                     <Share2 className="w-5 h-5" />
-                    <span className="absolute bottom-full right-0 mb-2 px-2 py-1 text-xs font-medium text-white bg-black rounded pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                    <span className="absolute bottom-full right-0 mb-2 px-2 py-1 text-xs font-medium text-foreground bg-background rounded pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                       Share
                     </span>
                   </button>
                   
                   <button
                     onClick={toggleFullscreen}
-                    className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors relative group"
+                    className="p-2 text-muted hover:text-foreground hover:bg-hover rounded-lg transition-colors relative group"
                     aria-label="Fullscreen"
                   >
                     <Maximize2 className="w-5 h-5" />
-                    <span className="absolute bottom-full right-0 mb-2 px-2 py-1 text-xs font-medium text-white bg-black rounded pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                    <span className="absolute bottom-full right-0 mb-2 px-2 py-1 text-xs font-medium text-foreground bg-background rounded pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                       Fullscreen
                     </span>
                   </button>
                 </div>
               </div>
+              )}
             </article>
 
+            {/* Similar games sous le jeu */}
+            <div className="bg-card rounded-xl shadow-md overflow-hidden mt-6">
+              <h3 className="text-lg font-bold p-4 border-b border-border text-foreground">
+                Similar games
+              </h3>
+              <div className="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-6 gap-4 p-4">
+                {similarGames.map(similarGame => (
+                  <GameCard key={similarGame.id} game={similarGame} />
+                ))}
+              </div>
+            </div>
+
             {/* Game info */}
-            <div className="bg-white rounded-xl shadow-md overflow-hidden mt-6 p-6">
-              <h2 className="text-2xl font-bold mb-4">{game.title}</h2>
+            <div className="bg-card rounded-xl shadow-md overflow-hidden mt-6 p-6">
+              <h2 className="text-2xl font-bold mb-4 text-foreground">{game.title}</h2>
               
               <div className="flex flex-wrap gap-2 mb-4">
-                <span className="bg-primary/10 text-primary text-sm px-2 py-1 rounded-full">
+                <span className="bg-primary/20 text-primary text-sm px-2 py-1 rounded-full">
                   {game.categoryName}
                 </span>
                 
                 {game.tags.map((tag, index) => (
                   <span 
                     key={index}
-                    className="bg-gray-100 text-gray-700 text-sm px-2 py-1 rounded-full"
+                    className="bg-hover text-muted text-sm px-2 py-1 rounded-full"
                   >
                     {tag}
                   </span>
@@ -449,32 +485,16 @@ const GamePage = () => {
               
               <div className="prose prose-sm max-w-none">
                 {game.instructions && (
-                  <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-100">
-                    <h3 className="font-bold mb-2">Instructions</h3>
-                    <p className="text-gray-600">{game.instructions}</p>
+                  <div className="mb-6 p-4 bg-hover rounded-lg border border-border">
+                    <h3 className="font-bold mb-2 text-foreground">Instructions</h3>
+                    <p className="text-muted">{game.instructions}</p>
                   </div>
                 )}
                 
-                <p className="text-gray-600 whitespace-pre-line">{game.description}</p>
+                <p className="text-muted whitespace-pre-line">{game.description}</p>
               </div>
             </div>
           </main>
-
-          {/* Sidebar - Ad and Similar Games */}
-          <div className="lg:col-span-1 space-y-6">
-
-            {/* Similar games */}
-            <div className="bg-white rounded-xl shadow-md overflow-hidden">
-              <h3 className="text-lg font-bold p-4 border-b border-gray-100">
-                Similar Games
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-1 gap-4 p-4">
-                {similarGames.map(similarGame => (
-                  <GameCard key={similarGame.id} game={similarGame} />
-                ))}
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </>

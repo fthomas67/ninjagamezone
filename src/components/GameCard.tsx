@@ -24,7 +24,7 @@ const GameCard = ({ game }: GameCardProps) => {
           loading="lazy"
         />
         <div className="absolute inset-0 pointer-events-none group-hover:ring-2 group-hover:ring-inset group-hover:ring-primary rounded-xl"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         <div className="absolute bottom-0 left-0 right-0 p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <h3 className="text-xs font-semibold text-white line-clamp-1">
             {game.title}

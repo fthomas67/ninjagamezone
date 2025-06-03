@@ -19,16 +19,16 @@ const Layout = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background">
       <ScrollToTop />
       <Header isSidebarOpen={isSidebarOpen} onSidebarToggle={() => setIsSidebarOpen(!isSidebarOpen)} />
-      <div className="flex flex-1 pt-[72px]">
+      <div className="flex flex-1">
         <Sidebar 
           isOpen={isSidebarOpen} 
           onClose={() => setIsSidebarOpen(false)}
         />
-        <div className="flex-1 flex flex-col lg:ml-60 xl:ml-64">
-          <main className="flex-1 p-4 md:p-6 lg:px-8">
+        <div className="flex-1 flex flex-col lg:ml-16">
+          <main className="flex-1 pt-[72px] px-4 pb-4 md:px-6 md:pb-6 lg:px-8">
             <Outlet />
           </main>
           <Footer />
