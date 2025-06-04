@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Search, Menu, X, History } from 'lucide-react';
+import { Search, Menu, X, History, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import bestOnMobile from '../data/gamemonetize_bestonmobile.json';
 import mostPlayed from '../data/gamemonetize_mostplayed.json';
 import bestGames from '../data/gamemonetize_bestgames.json';
@@ -18,9 +18,16 @@ interface Game {
 interface HeaderProps {
   isSidebarOpen: boolean;
   onSidebarToggle: () => void;
+  isSidebarExpanded: boolean;
+  onSidebarExpandToggle: () => void;
 }
 
-const Header = ({ isSidebarOpen, onSidebarToggle }: HeaderProps) => {
+const Header = ({ 
+  isSidebarOpen, 
+  onSidebarToggle, 
+  isSidebarExpanded,
+  onSidebarExpandToggle 
+}: HeaderProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [suggestions, setSuggestions] = useState<Game[]>([]);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -90,6 +97,17 @@ const Header = ({ isSidebarOpen, onSidebarToggle }: HeaderProps) => {
             aria-label="Toggle menu"
           >
             <Menu className="w-6 h-6" />
+          </button>
+          <button
+            onClick={onSidebarExpandToggle}
+            className="hidden lg:flex items-center justify-center w-10 h-10 hover:bg-hover rounded-lg transition-colors text-muted"
+            aria-label="Toggle sidebar width"
+          >
+            {isSidebarExpanded ? (
+              <PanelLeftClose className="w-6 h-6" />
+            ) : (
+              <PanelLeftOpen className="w-6 h-6" />
+            )}
           </button>
           <Link to="/" className="flex items-center gap-2 shrink-0">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">

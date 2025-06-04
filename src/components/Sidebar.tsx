@@ -9,11 +9,13 @@ import GameCard from './GameCard';
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
+  isExpanded: boolean;
 }
 
 const Sidebar = ({ 
   isOpen, 
   onClose,
+  isExpanded,
 }: SidebarProps) => {
   const [isScrolling, setIsScrolling] = useState(false);
   const scrollTimeout = useRef<ReturnType<typeof setTimeout>>();
@@ -118,13 +120,14 @@ const Sidebar = ({
         <aside
           className={`
             fixed top-[65px] left-0 z-40
-            w-16
+            ${isExpanded ? 'w-48' : 'w-16'}
             h-[calc(100vh-65px)]
             flex flex-col
             shadow-[1px_0_2px_rgba(0,0,0,0.05)]
             bg-sidebar
             transition-all duration-300 ease-in-out
             ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+            overflow-visible
           `}
         >
           <nav 
@@ -142,17 +145,20 @@ const Sidebar = ({
                 <li key={filter.type} className="relative group">
                   <button 
                     onClick={() => handlePopularityClick(filter.type)}
-                    className={`nav-item w-full text-left text-muted hover:bg-hover flex items-center justify-center rounded-lg px-2 py-2 transition-all duration-200
+                    className={`nav-item w-full text-left text-muted hover:bg-hover flex items-center rounded-lg px-2 py-2 transition-all duration-200
                       ${currentFilter === filter.type ? 'bg-hover text-foreground font-bold' : ''}
                     `}
                     aria-label={filter.label}
                   >
                     <span className="text-xl w-8 flex justify-center items-center">{filter.icon}</span>
+                    {isExpanded && <span className="ml-2">{filter.label}</span>}
                   </button>
                   {/* Tooltip */}
-                  <span className="pointer-events-none absolute left-full top-1/2 -translate-y-1/2 ml-2 px-3 py-2 rounded-lg bg-border text-foreground text-sm font-semibold shadow-lg opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 whitespace-nowrap z-50">
-                    {filter.label}
-                  </span>
+                  {!isExpanded && (
+                    <span className="pointer-events-none absolute left-full top-1/2 -translate-y-1/2 ml-2 px-3 py-2 rounded-lg bg-hover text-foreground text-sm font-semibold shadow-[0_4px_12px_rgba(0,0,0,0.15)] opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 whitespace-nowrap z-50">
+                      {filter.label}
+                    </span>
+                  )}
                 </li>
               ))}
             </ul>
@@ -163,17 +169,20 @@ const Sidebar = ({
                 <li key={category.id} className="relative group">
                   <button
                     onClick={() => handleCategoryClick(category.id)}
-                    className={`nav-item w-full text-left text-muted hover:bg-hover flex items-center justify-center rounded-lg px-2 py-2 transition-all duration-200
+                    className={`nav-item w-full text-left text-muted hover:bg-hover flex items-center rounded-lg px-2 py-2 transition-all duration-200
                       ${currentCategory === category.id ? 'bg-hover text-foreground font-bold' : ''}
                     `}
                     aria-label={category.name}
                   >
                     <span className="text-xl w-8 flex justify-center items-center">{category.emoji}</span>
+                    {isExpanded && <span className="ml-2">{category.name}</span>}
                   </button>
                   {/* Tooltip */}
-                  <span className="pointer-events-none absolute left-full top-1/2 -translate-y-1/2 ml-2 px-3 py-2 rounded-lg bg-border text-foreground text-sm font-semibold shadow-lg opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 whitespace-nowrap z-50">
-                    {category.name}
-                  </span>
+                  {!isExpanded && (
+                    <span className="pointer-events-none absolute left-full top-1/2 -translate-y-1/2 ml-2 px-3 py-2 rounded-lg bg-hover text-foreground text-sm font-semibold shadow-[0_4px_12px_rgba(0,0,0,0.15)] opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 whitespace-nowrap z-50">
+                      {category.name}
+                    </span>
+                  )}
                 </li>
               ))}
             </ul>
