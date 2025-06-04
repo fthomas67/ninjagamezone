@@ -3,7 +3,7 @@ import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { categories, popularityFilters, getFilterBySlug, getFilterSlug } from '../data/categories';
 import { PopularityFilter as PopularityFilterType } from '../types';
 import { createSlug } from '../utils/slug';
-import { History, X } from 'lucide-react';
+import { History, X, Home } from 'lucide-react';
 import GameCard from './GameCard';
 
 interface SidebarProps {
@@ -29,7 +29,12 @@ const Sidebar = ({
   const getCurrentState = () => {
     const pathParts = location.pathname.split('/').filter(Boolean);
     let currentCategory = 0;
-    let currentFilter: PopularityFilterType = 'mostplayed';
+    let currentFilter: PopularityFilterType | undefined = undefined;
+
+    // Si on est sur la page d'accueil, on ne sélectionne aucun filtre
+    if (pathParts.length === 0) {
+      return { currentCategory, currentFilter };
+    }
 
     const filterSlug = pathParts[pathParts.length - 1];
     const filter = getFilterBySlug(filterSlug);
@@ -51,8 +56,8 @@ const Sidebar = ({
     if (!category) return;
 
     const categorySlug = createSlug(category.name);
-    const filterSlug = getFilterSlug(currentFilter);
-    navigate(`/${categorySlug}/${filterSlug}`);
+    const filterSlug = currentFilter ? getFilterSlug(currentFilter) : '';
+    navigate(`/${categorySlug}${filterSlug ? `/${filterSlug}` : ''}`);
     onClose();
   };
 
@@ -140,6 +145,24 @@ const Sidebar = ({
           >
             <h3 className="sr-only">Trier par</h3>
             <ul className="space-y-1 mb-4">
+              <li className="relative group">
+                <Link 
+                  to="/"
+                  className={`nav-item w-full text-left text-muted hover:bg-hover flex items-center rounded-lg px-2 py-2 transition-all duration-200
+                    ${location.pathname === '/' ? 'bg-hover text-foreground font-bold' : ''}
+                  `}
+                  aria-label="Home"
+                >
+                  <span className="text-xl w-8 flex justify-center items-center">🏠</span>
+                  {isExpanded && <span className="ml-2">Home</span>}
+                </Link>
+                {/* Tooltip */}
+                {!isExpanded && (
+                  <span className="pointer-events-none absolute left-full top-1/2 -translate-y-1/2 ml-2 px-3 py-2 rounded-lg bg-hover text-foreground text-sm font-semibold shadow-[0_4px_12px_rgba(0,0,0,0.15)] opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 whitespace-nowrap z-50">
+                    Home
+                  </span>
+                )}
+              </li>
               {popularityFilters.map((filter) => (
                 <li key={filter.type} className="relative group">
                   <button 
