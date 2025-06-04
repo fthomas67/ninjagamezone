@@ -85,7 +85,7 @@ const FilterPage = ({ filter }: FilterPageProps) => {
         </script>
       </Helmet>
 
-      <div className="fade-in max-w-full overflow-x-hidden">
+      <div className="fade-in max-w-full overflow-x-hidden pt-6">
         <div className="mb-6">
           <h1 className="text-2xl md:text-3xl font-bold mb-2">
             {getFilterTitle()}
