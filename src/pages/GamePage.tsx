@@ -1,13 +1,26 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { fetchGameBySlug, getMockGames } from '../services/gameService';
+import { fetchGameBySlug } from '../services/gameService';
 import { Game } from '../types';
-import { Maximize2, Share2, Gamepad2, AlertTriangle, X, PlayCircle } from 'lucide-react';
+import { Maximize2, Share2, Gamepad2, X, PlayCircle } from 'lucide-react';
 import { createSlug } from '../utils/slug';
 import { Helmet } from 'react-helmet-async';
 import bestOnMobileGamesData from '../data/gamemonetize_bestonmobile.json';
 import GameCard from '../components/GameCard';
 import '../styles/ios-fullscreen.css';
+
+// Déclaration du type pour VIDEO_OPTIONS
+declare global {
+  interface Window {
+    VIDEO_OPTIONS: {
+      gameid: string;
+      width: string;
+      height: string;
+      color: string;
+      getAds: string;
+    };
+  }
+}
 
 interface GameData {
   id: string;
@@ -38,6 +51,7 @@ const GamePage = () => {
   const [showMobileWarning, setShowMobileWarning] = useState(true);
   const iframeParentRef = useRef<HTMLDivElement>(null);
   const [showPreGame, setShowPreGame] = useState(true);
+  const [showHowToPlay, setShowHowToPlay] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -252,6 +266,57 @@ const GamePage = () => {
       }
     }
   }, [game]);
+
+  // Fonction pour extraire le gameid de l'URL
+  const extractGameId = (url: string) => {
+    const parts = url.split('/');
+    return parts[parts.length - 2];
+  };
+
+  // Fonction pour charger la vidéo
+  const loadVideo = (gameId: string) => {
+    const videoOptions = {
+      gameid: gameId,
+      width: "100%",
+      height: "480px",
+      color: "#3f007e",
+      getAds: "false"
+    };
+
+    window.VIDEO_OPTIONS = videoOptions;
+
+    // Charger jQuery d'abord
+    const jqueryScript = document.createElement('script');
+    jqueryScript.src = 'https://code.jquery.com/jquery-3.7.1.min.js';
+    jqueryScript.integrity = 'sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=';
+    jqueryScript.crossOrigin = 'anonymous';
+    
+    // Charger le script de la vidéo après jQuery
+    jqueryScript.onload = () => {
+      const videoScript = document.createElement('script');
+      videoScript.type = 'text/javascript';
+      videoScript.src = 'https://api.gamemonetize.com/video.js';
+      document.body.appendChild(videoScript);
+    };
+
+    document.body.appendChild(jqueryScript);
+  };
+
+  // Effet pour charger/décharger la vidéo
+  useEffect(() => {
+    if (showHowToPlay && game) {
+      const gameId = extractGameId(game.url);
+      loadVideo(gameId);
+    }
+
+    return () => {
+      // Nettoyer le script et la div de la vidéo
+      const script = document.getElementById('gamemonetize-video-api');
+      const videoDiv = document.getElementById('gamemonetize-video');
+      if (script) script.remove();
+      if (videoDiv) videoDiv.innerHTML = '';
+    };
+  }, [showHowToPlay, game]);
   
   if (loading) {
     return (
@@ -351,7 +416,6 @@ const GamePage = () => {
                         className="text-button-brand text-xl font-bold px-10 py-4 rounded-full shadow-lg flex items-center gap-3 transition-all duration-300 mb-2 bg-gradient-yellow shadow-yellow-glow hover:bg-gradient-yellow-hover hover:shadow-yellow-glow-hover hover:scale-hover active:scale-95"
                         onClick={() => {
                           setShowPreGame(false);
-                          // Envoyer l'événement Google Analytics
                           if (window.gtag) {
                             window.gtag('event', 'game_start', {
                               'game_id': game.id,
@@ -363,6 +427,12 @@ const GamePage = () => {
                       >
                         Play Now
                         <PlayCircle className="w-7 h-7" />
+                      </button>
+                      <button
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-hover transition-colors text-muted"
+                        onClick={() => setShowHowToPlay(true)}
+                      >
+                        <span className="font-medium">Game Preview</span>
                       </button>
                     </div>
                   </div>
@@ -492,6 +562,25 @@ const GamePage = () => {
           </main>
         </div>
       </div>
+
+      {/* Modal Game Preview */}
+      {showHowToPlay && (
+        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+          <div className="bg-background rounded-xl w-full max-w-3xl relative">
+            <button
+              onClick={() => setShowHowToPlay(false)}
+              className="absolute top-4 right-4 p-2 hover:bg-hover rounded-full transition-colors"
+              aria-label="Close modal"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <div className="p-6">
+              <h2 className="text-2xl font-bold mb-4">Game Preview</h2>
+              <div id="gamemonetize-video" className="w-full aspect-video bg-black rounded-lg"></div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
