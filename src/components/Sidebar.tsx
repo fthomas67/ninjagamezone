@@ -140,7 +140,7 @@ const Sidebar = ({
             `}
           >
             <h3 className="sr-only">Trier par</h3>
-            <ul className="space-y-1 mb-6">
+            <ul className="space-y-1 mb-4">
               {popularityFilters.map((filter) => (
                 <li key={filter.type} className="relative group">
                   <button 
@@ -163,8 +163,10 @@ const Sidebar = ({
               ))}
             </ul>
 
+            <div className="border-t border-border-light my-4" />
+
             <h3 className="sr-only">Catégories</h3>
-            <ul className="space-y-1">
+            <ul className="space-y-1 mb-4">
               {categories.map((category) => (
                 <li key={category.id} className="relative group">
                   <button

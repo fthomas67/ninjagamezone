@@ -18,6 +18,7 @@ export default {
         sidebar: '#21242f',
         header: '#191c26',
         border: '#191c26',
+        'border-light': '#2d2d42',
         foreground: '#fff',
         muted: '#B0B0B0',
         hover: '#353545',
