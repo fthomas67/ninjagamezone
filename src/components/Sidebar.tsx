@@ -120,7 +120,7 @@ const Sidebar = ({
         <aside
           className={`
             fixed top-[65px] left-0 z-40
-            ${isExpanded ? 'w-48' : 'w-16'}
+            w-60 lg:w-48
             h-[calc(100vh-65px)]
             flex flex-col
             shadow-[1px_0_2px_rgba(0,0,0,0.05)]
@@ -133,10 +133,9 @@ const Sidebar = ({
           <nav 
             ref={navRef}
             className={`
-              h-full overflow-y-auto pt-8 px-2 pb-4
+              h-full overflow-y-auto overflow-x-visible pt-8 px-2 pb-4
               ${isScrolling ? 'scrollbar-visible' : 'scrollbar-hidden'}
               transition-[scrollbar] duration-300
-              overflow-visible
             `}
           >
             <h3 className="sr-only">Trier par</h3>
@@ -193,7 +192,7 @@ const Sidebar = ({
       </div>
       {/* Encart jeux récents mobile (fixe en bas) */}
       {isOpen && (
-        <div className="lg:hidden fixed left-0 bottom-0 w-60 xl:w-64 bg-sidebar text-foreground border-t border-border z-50">
+        <div className="lg:hidden fixed left-0 bottom-0 w-60 bg-sidebar text-foreground border-t border-border-light z-50">
           <button
             onClick={() => setShowRecent(v => !v)}
             className="flex items-center gap-2 w-full px-4 py-3 hover:bg-primary/10 transition-colors font-medium"
