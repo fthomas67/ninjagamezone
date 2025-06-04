@@ -134,6 +134,8 @@ const GamePage = () => {
           }
           
           setGame(foundGame);
+          // Réinitialiser showPreGame à true lorsque le jeu change
+          setShowPreGame(true);
           
           // Set initial iframe size based on game dimensions
           if (foundGame.width && foundGame.height) {
@@ -333,39 +335,6 @@ const GamePage = () => {
                 ${!showPreGame ? 'bg-black' : ''}
               `}
             >
-              {isMobile && !isMobileOptimized && showMobileWarning && !isFullscreen && (
-                <div className="absolute top-0 left-0 right-0 bg-primary/90 text-button-brand p-3 z-10 flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <AlertTriangle className="w-5 h-5" />
-                    <p className="text-sm">
-                      This game is not optimized for mobile and may not work correctly on your device.
-                    </p>
-                  </div>
-                  <button 
-                    onClick={() => setShowMobileWarning(false)}
-                    className="p-1 hover:bg-white/10 rounded-full transition-colors"
-                    aria-label="Close warning"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-              )}
-
-              {/* Affichage du bouton de fermeture en fullscreen iOS */}
-              {isFullscreen && /iPad|iPhone|iPod/.test(navigator.userAgent) && (
-                <div className="fixed top-0 left-0 w-full z-[10000] bg-background/90 flex items-center justify-between px-4 py-3 shadow-md">
-                  <span className="text-foreground font-semibold text-base">Fullscreen</span>
-                  <button
-                    onClick={toggleFullscreen}
-                    className="flex items-center gap-2 text-foreground bg-primary/80 hover:bg-primary px-4 py-2 rounded-full font-medium transition-colors"
-                    aria-label="Quit fullscreen"
-                  >
-                    <X className="w-5 h-5" />
-                    <span>Quit fullscreen</span>
-                  </button>
-                </div>
-              )}
-
               {showPreGame && game ? (
                 <div className="flex flex-row items-center justify-center w-full h-full min-h-[320px] min-w-[220px] py-12">
                   {/* Centre : thumb, titre, boutons */}
@@ -380,7 +349,17 @@ const GamePage = () => {
                     <div className="flex flex-col gap-4 w-full items-center">
                       <button
                         className="text-button-brand text-xl font-bold px-10 py-4 rounded-full shadow-lg flex items-center gap-3 transition-all duration-300 mb-2 bg-gradient-yellow shadow-yellow-glow hover:bg-gradient-yellow-hover hover:shadow-yellow-glow-hover hover:scale-hover active:scale-95"
-                        onClick={() => setShowPreGame(false)}
+                        onClick={() => {
+                          setShowPreGame(false);
+                          // Envoyer l'événement Google Analytics
+                          if (window.gtag) {
+                            window.gtag('event', 'game_start', {
+                              'game_id': game.id,
+                              'game_title': game.title,
+                              'game_category': game.categoryName
+                            });
+                          }
+                        }}
                       >
                         Play Now
                         <PlayCircle className="w-7 h-7" />
@@ -389,30 +368,46 @@ const GamePage = () => {
                   </div>
                 </div>
               ) : (
-                <div 
-                  ref={iframeParentRef}
-                  className={`${!isFullscreen ? 'mx-auto h-[540px]' : ''}`}
-                  style={{ 
-                    aspectRatio: isFullscreen ? 'auto' : ''
-                  }}
-                >
-                  <iframe
-                    src={game.url}
-                    title={game.title}
-                    className={`w-full h-full ${isFullscreen && /iPad|iPhone|iPod/.test(navigator.userAgent) ? 'ios-fullscreen' : ''}`}
-                    style={{
-                      width: isFullscreen ? '100vw' : '100%',
-                      height: isFullscreen ? '100vh' : '100%',
-                      border: 'none',
-                      objectFit: 'contain'
+                <>
+                  {/* Affichage du bouton de fermeture en fullscreen iOS */}
+                  {isFullscreen && /iPad|iPhone|iPod/.test(navigator.userAgent) && (
+                    <div className="fixed top-0 left-0 w-full z-[10000] bg-background/90 flex items-center justify-between px-4 py-3 shadow-md">
+                      <span className="text-foreground font-semibold text-base">Fullscreen</span>
+                      <button
+                        onClick={toggleFullscreen}
+                        className="flex items-center gap-2 text-foreground bg-primary/80 hover:bg-primary px-4 py-2 rounded-full font-medium transition-colors"
+                        aria-label="Quit fullscreen"
+                      >
+                        <X className="w-5 h-5" />
+                        <span>Quit fullscreen</span>
+                      </button>
+                    </div>
+                  )}
+                  <div 
+                    ref={iframeParentRef}
+                    className={`${!isFullscreen ? 'mx-auto h-[540px]' : ''}`}
+                    style={{ 
+                      aspectRatio: isFullscreen ? 'auto' : ''
                     }}
-                    allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; interest-cohort"
-                    loading="lazy"
-                    scrolling="no"
-                    sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-presentation allow-popups-to-escape-sandbox"
-                    referrerPolicy="origin"
-                  ></iframe>
-                </div>
+                  >
+                    <iframe
+                      src={game.url}
+                      title={game.title}
+                      className={`w-full h-full ${isFullscreen && /iPad|iPhone|iPod/.test(navigator.userAgent) ? 'ios-fullscreen' : ''}`}
+                      style={{
+                        width: isFullscreen ? '100vw' : '100%',
+                        height: isFullscreen ? '100vh' : '100%',
+                        border: 'none',
+                        objectFit: 'contain'
+                      }}
+                      allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; interest-cohort"
+                      loading="lazy"
+                      scrolling="no"
+                      sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-presentation allow-popups-to-escape-sandbox"
+                      referrerPolicy="origin"
+                    ></iframe>
+                  </div>
+                </>
               )}
               
               {/* Game controls bar */}
