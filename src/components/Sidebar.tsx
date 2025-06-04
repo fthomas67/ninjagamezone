@@ -120,7 +120,7 @@ const Sidebar = ({
         <aside
           className={`
             fixed top-[65px] left-0 z-40
-            w-60 lg:w-48
+            w-60 ${isExpanded ? 'lg:w-48' : 'lg:w-16'}
             h-[calc(100vh-65px)]
             flex flex-col
             shadow-[1px_0_2px_rgba(0,0,0,0.05)]
