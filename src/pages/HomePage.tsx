@@ -6,6 +6,7 @@ import { categories } from '../data/categories';
 import { fetchGames } from '../services/gameService';
 import GameCard from '../components/GameCard';
 import { Game, PopularityFilter } from '../types';
+import { createSlug } from '../utils/slug';
 
 const HomePage = () => {
   const [mostPlayedGames, setMostPlayedGames] = useState<Game[]>([]);
@@ -182,7 +183,7 @@ const HomePage = () => {
             {categories.map(category => (
               <Link
                 key={category.id}
-                to={`/${category.name.toLowerCase()}`}
+                to={`/${createSlug(category.name)}`}
                 className="group p-4 rounded-xl bg-hover hover:bg-hover/80 transition-colors"
               >
                 <div className="text-3xl mb-2">{category.emoji}</div>
